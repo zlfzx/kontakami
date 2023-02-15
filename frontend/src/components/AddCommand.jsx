@@ -24,7 +24,7 @@ export default function AddCommand({ isOpen, closeModal }) {
                     leaveFrom="opacity-100"
                     leaveTo="opacity-0"
                 >
-                    <div className="fixed inset-0 bg-black bg-opacity-25" />
+                    <div className="fixed inset-0 bg-black bg-opacity-50" />
                 </Transition.Child>
 
                 <div className="fixed inset-0 overflow-y-auto">
@@ -46,10 +46,6 @@ export default function AddCommand({ isOpen, closeModal }) {
                                     Add Command
                                 </Dialog.Title>
                                 <div className="mt-3">
-                                    {/* <p className="text-sm text-gray-500">
-                                        Your payment has been successfully submitted. We’ve sent
-                                        you an email with all of the details of your order.
-                                    </p> */}
                                     <form action="#" method="POST">
                                         <div className="space-y-6 ">
                                             <div>
@@ -61,9 +57,9 @@ export default function AddCommand({ isOpen, closeModal }) {
                                             </div>
 
                                             <div>
-                                                <label htmlFor="about" className="block text-sm font-medium text-gray-500">About</label>
+                                                <label htmlFor="message" className="block text-sm font-medium text-gray-500">Message</label>
                                                 <div className="mt-1">
-                                                    <textarea id="about" name="about" rows="3" className="mt-1 px-2 py-1 block w-full border-gray-300 shadow-sm focus:border-purple-500 focus:ring-0 sm:text-sm" placeholder="lorem ipsum dolor sit amet"></textarea>
+                                                    <textarea id="message" name="message" rows="3" className="mt-1 px-2 py-1 block w-full border-gray-300 shadow-sm focus:border-purple-500 focus:ring-0 sm:text-sm" placeholder="lorem ipsum dolor sit amet"></textarea>
                                                 </div>
                                             </div>
 
