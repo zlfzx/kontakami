@@ -1,5 +1,4 @@
 import { useContext, useEffect } from 'react'
-import './App.css'
 import Sidebar from './layouts/Sidebar'
 import Wrapper from './layouts/Wrapper'
 import { Toaster } from 'react-hot-toast'

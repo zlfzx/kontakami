@@ -1,16 +1,21 @@
-import React from 'react'
+import React, { lazy } from 'react'
 import ReactDOM from 'react-dom/client'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import App from './App'
-import Chat from './pages/Chat'
-import Dashboard from './pages/Dashboard'
 import './index.css'
-import ChatUser, { getChatUser } from './components/ChatUser'
-import Setting from './pages/Setting'
-import ChatIndex from './components/ChatIndex'
+import Loader from './components/Loader'
 import axios from 'axios'
+import { Suspense } from 'react'
 import { ChatProvider } from './store'
-import Command, { getCommands } from './pages/Command'
+import { getChatUser } from './components/ChatUser'
+import { getCommands } from './pages/Command'
+
+const App = lazy(() => import('./App'))
+const Dashboard = lazy(() => import('./pages/Dashboard'))
+const Chat = lazy(() => import('./pages/Chat'))
+const ChatIndex = lazy(() => import('./components/ChatIndex'))
+const ChatUser = lazy(() => import('./components/ChatUser'))
+const Command = lazy(() => import('./pages/Command'))
+const Setting = lazy(() => import('./pages/Setting'))
 
 axios.defaults.baseURL = 'http://localhost:8080'
 
@@ -54,8 +59,10 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <ChatProvider>
-      <RouterProvider router={router} />
-    </ChatProvider>
+    <Suspense fallback={<Loader />}>
+      <ChatProvider>
+        <RouterProvider router={router} />
+      </ChatProvider>
+    </Suspense>
   </React.StrictMode>,
 )

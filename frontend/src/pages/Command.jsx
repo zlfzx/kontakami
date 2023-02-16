@@ -1,7 +1,9 @@
-import { useEffect, useState } from 'react'
-import AddCommand from '../components/AddCommand'
+import { lazy, useEffect, useState } from 'react'
+// import AddCommand from '../components/AddCommand'
 import axios from 'axios'
 import { useLoaderData } from 'react-router-dom'
+
+const AddCommand = lazy(() => import('../components/AddCommand'))
 
 export async function getCommands() {
     const req = await axios.get('/api/v1/command')
