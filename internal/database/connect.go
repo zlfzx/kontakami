@@ -23,6 +23,7 @@ func Connect() *gorm.DB {
 		&models.User{},
 		&models.Chat{},
 		&models.Message{},
+		&models.Command{},
 	)
 
 	if err == nil && db.Migrator().HasTable(&models.Setting{}) {

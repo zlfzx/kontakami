@@ -1,7 +1,8 @@
 import { useState, Fragment } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
+import axios from 'axios'
 
-export default function AddCommand({ isOpen, closeModal }) {
+export default function AddCommand({ isOpen, closeModal, setCommands }) {
     // let [isOpen, setIsOpen] = useState(false)
 
     // function closeModal() {
@@ -11,6 +12,27 @@ export default function AddCommand({ isOpen, closeModal }) {
     // function openModal() {
     //     setIsOpen(true)
     // }
+
+    const [command, setCommand] = useState('')
+    const [message, setMessage] = useState('')
+
+    const addCommand = async (e) => {
+        e.preventDefault()
+        console.log('add command')
+        console.log(command, message)
+
+        axios.post('/api/v1/command', {
+            command: command,
+            message: message
+        }).then((res) => {
+            console.log(res)
+            const command = res.data.data
+            setCommands(command)
+            closeModal()
+        }).catch((err) => {
+            console.log(err)
+        })
+    }
 
     return (
         <Transition appear show={isOpen} as={Fragment}>
@@ -46,20 +68,20 @@ export default function AddCommand({ isOpen, closeModal }) {
                                     Add Command
                                 </Dialog.Title>
                                 <div className="mt-3">
-                                    <form action="#" method="POST">
+                                    <form action="#" method="POST" onSubmit={addCommand}>
                                         <div className="space-y-6 ">
                                             <div>
-                                                <label htmlFor="company-website" className="block text-sm font-medium text-gray-500">Command</label>
+                                                <label htmlFor="form-command" className="block text-sm font-medium text-gray-500">Command</label>
                                                 <div className="mt-1 flex shadow-sm">
                                                     <span className="inline-flex items-center border border-r-0 border-gray-300 bg-gray-50 px-3 text-sm text-gray-500">/</span>
-                                                    <input type="text" name="company-website" id="company-website" className="block w-full flex-1 rounded-none border-gray-300 focus:border-purple-500 focus:ring-0  sm:text-sm" placeholder="command" />
+                                                    <input type="text" name="command" value={command} onChange={(e) => setCommand(e.target.value)} id="form-command" className="block w-full flex-1 rounded-none border-gray-300 focus:border-purple-500 focus:ring-0  sm:text-sm" placeholder="command" />
                                                 </div>
                                             </div>
 
                                             <div>
                                                 <label htmlFor="message" className="block text-sm font-medium text-gray-500">Message</label>
                                                 <div className="mt-1">
-                                                    <textarea id="message" name="message" rows="3" className="mt-1 px-2 py-1 block w-full border-gray-300 shadow-sm focus:border-purple-500 focus:ring-0 sm:text-sm" placeholder="lorem ipsum dolor sit amet"></textarea>
+                                                    <textarea id="message" name="message" value={message} onChange={(e) => setMessage(e.target.value)} rows="3" className="mt-1 px-2 py-1 block w-full border-gray-300 shadow-sm focus:border-purple-500 focus:ring-0 sm:text-sm" placeholder="lorem ipsum dolor sit amet"></textarea>
                                                 </div>
                                             </div>
 
@@ -72,9 +94,8 @@ export default function AddCommand({ isOpen, closeModal }) {
                                                     Cancel
                                                 </button>
                                                 <button
-                                                    type="button"
+                                                    type="submit"
                                                     className="inline-flex justify-center border border-transparent bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2"
-                                                    onClick={closeModal}
                                                 >
                                                     Save
                                                 </button>

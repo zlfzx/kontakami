@@ -8,6 +8,7 @@ import (
 	"kontakami/internal/services/bot"
 	"kontakami/internal/services/chat"
 	chatsocket "kontakami/internal/services/chat_socket"
+	"kontakami/internal/services/command"
 	"net/http"
 	"os"
 
@@ -31,6 +32,7 @@ func main() {
 		Bot:        bot.Init(app),
 		Chat:       chat.Init(app),
 		ChatSocket: chatsocket.Init(app),
+		Command:    command.Init(app),
 	}
 
 	routes := routes.LoadRoutes(app)

@@ -1,9 +1,47 @@
-import { useState } from 'react'
-import { Dialog } from '@headlessui/react'
+import { useEffect, useState } from 'react'
 import AddCommand from '../components/AddCommand'
+import axios from 'axios'
+import { useLoaderData } from 'react-router-dom'
+
+export async function getCommands() {
+    const req = await axios.get('/api/v1/command')
+    const data = req.data
+    const listCommand = data.data
+
+    return { listCommand }
+}
 
 export default function Command() {
-    let [isOpen, setIsOpen] = useState(false)
+
+    const [isOpen, setIsOpen] = useState(false)
+    const [commands, setCommands] = useState([])
+
+    const { listCommand } = useLoaderData()
+
+    useEffect(() => {
+        setCommands(listCommand)
+    }, [])
+
+    const setActive = async (id, status) => {
+        await axios.put(`/api/v1/command/${id}/update-status`, {
+            is_active: status
+        }).then((res) => {
+            const data = res.data
+            const command = data.data
+            
+            const newCommands = commands.map((cmd) => {
+                if (cmd.id == command.id) {
+                    return command
+                }
+                return cmd
+            })
+
+            setCommands(newCommands)
+        })
+        .catch((err) => {
+            console.log(err)
+        })
+    }
 
     return (
         <>
@@ -47,195 +85,66 @@ export default function Command() {
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
-                                        <p className="text-gray-900 whitespace-no-wrap">
-                                            Jean marc
-                                        </p>
-                                    </td>
-                                    <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
-                                        <p className="text-gray-900 whitespace-no-wrap">
-                                            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Fugit, voluptates?
-                                        </p>
-                                    </td>
-                                    <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
-                                        <div className="relative inline-block w-10 mr-2 align-middle select-none">
-                                            <input type="checkbox" name="toggle" id="Purple"
-                                                className="checked:bg-green-500 outline-none focus:outline-none right-4 checked:right-0 duration-200 ease-in absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer" />
-                                            <label htmlFor="Purple" className="block h-6 overflow-hidden bg-gray-300 rounded-full cursor-pointer">
-                                            </label>
-                                        </div>
-                                    </td>
-                                    <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
-                                        <div className="flex justify-center items-center">
-                                            <button type="button" className="flex justify-center items-center  bg-red-600 hover:bg-red-700 focus:ring-red-500 focus:ring-offset-red-200 opacity-70 text-white transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 w-8 h-8">
-                                                <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-edit" width="15" height="15" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
-                                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                                                    <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1"></path>
-                                                    <path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z"></path>
-                                                    <path d="M16 5l3 3"></path>
-                                                </svg>
-                                            </button>
+                                {commands?.map((command) => (
+                                    <tr key={command.id}>
+                                        <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
+                                            <p className="text-gray-900 whitespace-no-wrap">
+                                                {command.command}
+                                            </p>
+                                        </td>
+                                        <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
+                                            <p className="text-gray-900 whitespace-no-wrap">
+                                                {command.message}
+                                            </p>
+                                        </td>
+                                        <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
+                                            <div className="relative inline-block w-10 mr-2 align-middle select-none">
+                                                <input type="checkbox" name="toggle" id={`check`+command.id}
+                                                    className="checked:bg-green-500 outline-none focus:outline-none right-4 checked:right-0 duration-200 ease-in absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer"
+                                                    checked={command.is_active ? 'checked' : ''}
+                                                    onChange={() =>setActive(command.id, !command.is_active)}
+                                                />
+                                                <label htmlFor={`check`+command.id} className="block h-6 overflow-hidden bg-gray-300 rounded-full cursor-pointer">
+                                                </label>
+                                            </div>
+                                        </td>
+                                        <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
+                                            <div className="flex justify-center items-center">
+                                                <button type="button" className="flex justify-center items-center  bg-red-600 hover:bg-red-700 focus:ring-red-500 focus:ring-offset-red-200 opacity-70 text-white transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 w-8 h-8">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-edit" width="15" height="15" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
+                                                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                                        <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1"></path>
+                                                        <path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z"></path>
+                                                        <path d="M16 5l3 3"></path>
+                                                    </svg>
+                                                </button>
 
-                                            <span className="w-2"></span>
+                                                <span className="w-2"></span>
 
-                                            <button type="button" className="flex justify-center items-center  bg-red-600 hover:bg-red-700 focus:ring-red-500 focus:ring-offset-red-200 text-white transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 w-8 h-8">
-                                                <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-trash" width="15" height="15" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
-                                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                                                    <path d="M4 7l16 0"></path>
-                                                    <path d="M10 11l0 6"></path>
-                                                    <path d="M14 11l0 6"></path>
-                                                    <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"></path>
-                                                    <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"></path>
-                                                </svg>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
-                                        <p className="text-gray-900 whitespace-no-wrap">
-                                            Marcus coco
-                                        </p>
-                                    </td>
-                                    <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
-                                        <p className="text-gray-900 whitespace-no-wrap">
-                                            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Porro blanditiis facilis expedita perspiciatis distinctio magnam similique doloribus ea, vero id!
-                                        </p>
-                                    </td>
-                                    <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
-                                        <div className="relative inline-block w-10 mr-2 align-middle select-none">
-                                            <input type="checkbox" name="toggle" id="Purple"
-                                                className="checked:bg-green-500 outline-none focus:outline-none right-4 checked:right-0 duration-200 ease-in absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer" />
-                                            <label htmlFor="Purple" className="block h-6 overflow-hidden bg-gray-300 rounded-full cursor-pointer">
-                                            </label>
-                                        </div>
-                                    </td>
-                                    <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
-                                        <div className="flex justify-center items-center">
-                                            <button type="button" className="flex justify-center items-center  bg-red-600 hover:bg-red-700 focus:ring-red-500 focus:ring-offset-red-200 opacity-70 text-white transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 w-8 h-8">
-                                                <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-edit" width="15" height="15" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
-                                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                                                    <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1"></path>
-                                                    <path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z"></path>
-                                                    <path d="M16 5l3 3"></path>
-                                                </svg>
-                                            </button>
-
-                                            <span className="w-2"></span>
-
-                                            <button type="button" className="flex justify-center items-center  bg-red-600 hover:bg-red-700 focus:ring-red-500 focus:ring-offset-red-200 text-white transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 w-8 h-8">
-                                                <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-trash" width="15" height="15" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
-                                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                                                    <path d="M4 7l16 0"></path>
-                                                    <path d="M10 11l0 6"></path>
-                                                    <path d="M14 11l0 6"></path>
-                                                    <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"></path>
-                                                    <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"></path>
-                                                </svg>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
-                                        <p className="text-gray-900 whitespace-no-wrap">
-                                            Ecric marc
-                                        </p>
-                                    </td>
-                                    <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
-                                        <p className="text-gray-900 whitespace-no-wrap">
-                                            Developer
-                                        </p>
-                                    </td>
-                                    <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
-                                        <div className="relative inline-block w-10 mr-2 align-middle select-none">
-                                            <input type="checkbox" name="toggle" id="Purple"
-                                                className="checked:bg-green-500 outline-none focus:outline-none right-4 checked:right-0 duration-200 ease-in absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer" />
-                                            <label htmlFor="Purple" className="block h-6 overflow-hidden bg-gray-300 rounded-full cursor-pointer">
-                                            </label>
-                                        </div>
-                                    </td>
-                                    <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
-                                        <div className="flex justify-center items-center">
-                                            <button type="button" className="flex justify-center items-center  bg-red-600 hover:bg-red-700 focus:ring-red-500 focus:ring-offset-red-200 opacity-70 text-white transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 w-8 h-8">
-                                                <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-edit" width="15" height="15" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
-                                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                                                    <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1"></path>
-                                                    <path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z"></path>
-                                                    <path d="M16 5l3 3"></path>
-                                                </svg>
-                                            </button>
-
-                                            <span className="w-2"></span>
-
-                                            <button type="button" className="flex justify-center items-center  bg-red-600 hover:bg-red-700 focus:ring-red-500 focus:ring-offset-red-200 text-white transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 w-8 h-8">
-                                                <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-trash" width="15" height="15" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
-                                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                                                    <path d="M4 7l16 0"></path>
-                                                    <path d="M10 11l0 6"></path>
-                                                    <path d="M14 11l0 6"></path>
-                                                    <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"></path>
-                                                    <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"></path>
-                                                </svg>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
-                                        <p className="text-gray-900 whitespace-no-wrap">
-                                            Julien Huger
-                                        </p>
-                                    </td>
-                                    <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
-                                        <p className="text-gray-900 whitespace-no-wrap">
-                                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Temporibus quidem incidunt ducimus atque facilis nesciunt, perspiciatis culpa impedit consequatur sint, exercitationem reprehenderit blanditiis ullam, doloremque mollitia consequuntur? Commodi sequi mollitia enim ipsum ea eligendi sit.
-                                        </p>
-                                    </td>
-                                    <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
-                                        <div className="relative inline-block w-10 mr-2 align-middle select-none">
-                                            <input type="checkbox" name="toggle" id="Purple"
-                                                className="checked:bg-green-500 outline-none focus:outline-none right-4 checked:right-0 duration-200 ease-in absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer" />
-                                            <label htmlFor="Purple" className="block h-6 overflow-hidden bg-gray-300 rounded-full cursor-pointer">
-                                            </label>
-                                        </div>
-                                    </td>
-                                    <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
-                                        <div className="flex justify-center items-center">
-                                            <button type="button" className="flex justify-center items-center  bg-red-600 hover:bg-red-700 focus:ring-red-500 focus:ring-offset-red-200 opacity-70 text-white transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 w-8 h-8">
-                                                <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-edit" width="15" height="15" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
-                                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                                                    <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1"></path>
-                                                    <path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z"></path>
-                                                    <path d="M16 5l3 3"></path>
-                                                </svg>
-                                            </button>
-
-                                            <span className="w-2"></span>
-
-                                            <button type="button" className="flex justify-center items-center  bg-red-600 hover:bg-red-700 focus:ring-red-500 focus:ring-offset-red-200 text-white transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 w-8 h-8">
-                                                <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-trash" width="15" height="15" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
-                                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                                                    <path d="M4 7l16 0"></path>
-                                                    <path d="M10 11l0 6"></path>
-                                                    <path d="M14 11l0 6"></path>
-                                                    <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"></path>
-                                                    <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"></path>
-                                                </svg>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
+                                                <button type="button" className="flex justify-center items-center  bg-red-600 hover:bg-red-700 focus:ring-red-500 focus:ring-offset-red-200 text-white transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 w-8 h-8">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-trash" width="15" height="15" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
+                                                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                                        <path d="M4 7l16 0"></path>
+                                                        <path d="M10 11l0 6"></path>
+                                                        <path d="M14 11l0 6"></path>
+                                                        <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"></path>
+                                                        <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"></path>
+                                                    </svg>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ))}
                             </tbody>
                         </table>
                     </div>
                 </div>
             </div>
-            
+
             <AddCommand
                 isOpen={isOpen}
                 closeModal={() => setIsOpen(false)}
+                setCommands={(command) => setCommands([...commands, command])}
             />
 
         </>
