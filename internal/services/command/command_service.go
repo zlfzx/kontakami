@@ -25,6 +25,11 @@ func (s *Service) GetCommand(id int64) (command models.Command) {
 	return
 }
 
+func (s *Service) GetActiveCommand() (commands []models.Command) {
+	s.DB.Where("is_active = ?", 1).Find(&commands)
+	return
+}
+
 func (s *Service) SaveCommand(command *models.Command) (*models.Command, error) {
 	s.DB.Save(&command)
 

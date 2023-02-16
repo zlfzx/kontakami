@@ -32,11 +32,8 @@ func InitBot() {
 
 	updates := bot.GetUpdatesChan(u)
 
-	// dummy command
-	commands := map[string]string{
-		"start": "Start bot",
-		"help":  "Help",
-	}
+	// list of commands
+	commands := app.Services.Command.GetActiveCommand()
 
 	for update := range updates {
 
@@ -47,10 +44,9 @@ func InitBot() {
 		if update.Message.Text != "" {
 			// fmt.Println(update.Message.Text)
 			if update.Message.IsCommand() {
-
-				for command, message := range commands {
-					if update.Message.Command() == command {
-						msg := tgbotapi.NewMessage(update.Message.Chat.ID, message)
+				for _, command := range commands {
+					if update.Message.Command() == command.Command {
+						msg := tgbotapi.NewMessage(update.Message.Chat.ID, command.Message)
 						msg.ReplyToMessageID = update.Message.MessageID
 
 						bot.Send(msg)
