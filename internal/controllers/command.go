@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"encoding/json"
-	"fmt"
 	"kontakami/internal/models"
 	"net/http"
 	"strconv"
@@ -77,16 +76,14 @@ func PutCommand(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var command models.Command
-
-	command.ID = id
+	command := models.Command{
+		ID: id,
+	}
 
 	if err := json.NewDecoder(r.Body).Decode(&command); err != nil {
 		ResponseError(w, r, http.StatusBadRequest, err.Error())
 		return
 	}
-
-	fmt.Println(command)
 
 	app.Services.Command.SaveCommand(&command)
 

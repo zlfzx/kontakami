@@ -32,9 +32,6 @@ func InitBot() {
 
 	updates := bot.GetUpdatesChan(u)
 
-	// list of commands
-	commands := app.Services.Command.GetActiveCommand()
-
 	for update := range updates {
 
 		if update.Message == nil {
@@ -44,6 +41,8 @@ func InitBot() {
 		if update.Message.Text != "" {
 			// fmt.Println(update.Message.Text)
 			if update.Message.IsCommand() {
+				// list of commands
+				commands := app.Services.Command.GetActiveCommand()
 				for _, command := range commands {
 					if update.Message.Command() == command.Command {
 						msg := tgbotapi.NewMessage(update.Message.Chat.ID, command.Message)
