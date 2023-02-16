@@ -18,7 +18,7 @@ export default function BubbleChat(props) {
 
     return (
         <div className={"w-full py-2 flex flex-col justify-start " + position}>
-            <div className={bg + " shadow-md rounded px-3 py-2 min-w-min max-w-lg whitespace-pre-wrap"}>
+            <div className={bg + " shadow-md px-3 py-2 min-w-min max-w-lg whitespace-pre-wrap text-gray-800"}>
                 { props.children }
             </div>
             <span className='text-xs py-1 text-gray-400'>{showCreatedAt}</span>

@@ -124,10 +124,10 @@ export default function ChatUser() {
             <div className="w-full bg-gray-100 px-4 py-5">
                 <form className="bg-white shadow rounded flex" onSubmit={sendChat}>
                     <div className="flex-1">
-                        <textarea name="" rows="1" className="w-full block outline-none py-3 px-4 bg-transparent resize-none" placeholder="Type a message..." value={message} onChange={e => setMessage(e.target.value)} onKeyDown={onEnterPress}></textarea>
+                        <textarea name="" rows="1" className="w-full block outline-none py-3 px-4 bg-transparent focus:border-purple-500 resize-none" placeholder="Type a message..." value={message} onChange={e => setMessage(e.target.value)} onKeyDown={onEnterPress}></textarea>
                     </div>
-                    <div className="flex-2 flex justify-center items-center">
-                        <button type="submit" className="w-full py-3 px-4 bg-purple-600 hover:bg-purple-700 focus:ring-purple-500 focus:ring-offset-purple-200 text-white transition ease-in duration-200 text-center shadow focus:outline-none focus:ring-2 focus:ring-offset-2 rounded">Send</button>
+                    <div className="flex-2 flex justify-center">
+                        <button type="submit" className="w-full py-3 px-4 bg-purple-600 hover:bg-purple-700 focus:ring-0 focus:ring-offset-purple-200 text-white transition ease-in duration-200 text-center shadow focus:outline-none">Send</button>
                     </div>
                 </form>
             </div>

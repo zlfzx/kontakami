@@ -40,6 +40,37 @@ func InitBot() {
 
 		if update.Message.Text != "" {
 			// fmt.Println(update.Message.Text)
+			if update.Message.IsCommand() {
+				// list of commands
+				commands := app.Services.Command.GetActiveCommand()
+				for _, command := range commands {
+					if update.Message.Command() == command.Command {
+						msg := tgbotapi.NewMessage(update.Message.Chat.ID, command.Message)
+						msg.ReplyToMessageID = update.Message.MessageID
+
+						bot.Send(msg)
+					}
+				}
+
+				// switch update.Message.Command() {
+				// case "start":
+				// 	msg := tgbotapi.NewMessage(update.Message.Chat.ID, "Hi!")
+				// 	msg.ReplyToMessageID = update.Message.MessageID
+
+				// 	bot.Send(msg)
+				// case "help":
+				// 	msg := tgbotapi.NewMessage(update.Message.Chat.ID, "Help!")
+				// 	msg.ReplyToMessageID = update.Message.MessageID
+
+				// 	bot.Send(msg)
+
+				// default:
+				// 	msg := tgbotapi.NewMessage(update.Message.Chat.ID, "I don't know that command")
+				// 	msg.ReplyToMessageID = update.Message.MessageID
+
+				// 	bot.Send(msg)
+				// }
+			}
 
 			// user
 			user := app.Services.Bot.SaveUser(&update)

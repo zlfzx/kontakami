@@ -10,6 +10,7 @@ import Setting from './pages/Setting'
 import ChatIndex from './components/ChatIndex'
 import axios from 'axios'
 import { ChatProvider } from './store'
+import Command, { getCommands } from './pages/Command'
 
 axios.defaults.baseURL = 'http://localhost:8080'
 
@@ -36,6 +37,11 @@ const router = createBrowserRouter([
             loader: getChatUser
           },
         ],
+      },
+      {
+        path: 'command',
+        element: <Command />,
+        loader: getCommands
       },
       {
         path: 'setting',
