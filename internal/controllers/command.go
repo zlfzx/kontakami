@@ -76,10 +76,7 @@ func PutCommand(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	command := models.Command{
-		ID: id,
-	}
-
+	command := app.Services.Command.GetCommand(id)
 	if err := json.NewDecoder(r.Body).Decode(&command); err != nil {
 		ResponseError(w, r, http.StatusBadRequest, err.Error())
 		return
