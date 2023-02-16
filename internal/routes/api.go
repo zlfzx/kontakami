@@ -32,6 +32,7 @@ func api() (r *chi.Mux) {
 		r.Post("/command", controllers.PostCommand)
 		r.Put("/command/{id}/update-status", controllers.UpdateStatusCommand)
 		r.Put("/command/{id}", controllers.PutCommand)
+		r.Delete("/command/{id}", controllers.DeleteCommand)
 	})
 
 	return

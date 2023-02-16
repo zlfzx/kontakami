@@ -41,3 +41,9 @@ func (s *Service) UpdateStatus(id int64, status bool) (command models.Command) {
 
 	return
 }
+
+func (s *Service) DeleteCommand(id int64) error {
+	s.DB.Delete(&models.Command{}, id)
+
+	return nil
+}

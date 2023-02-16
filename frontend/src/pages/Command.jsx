@@ -43,6 +43,23 @@ export default function Command() {
         })
     }
 
+    const deleteCommand = async (command) => {
+        if (confirm(`Do you want to delete command /${command.command}?`)) {
+            await axios.delete(`/api/v1/command/${command.id}`)
+            .then((res) => {
+                const newCommands = commands.filter((cmd) => {
+                    return cmd.id != command.id
+                })
+                setCommands(newCommands)
+
+                alert('Command deleted')
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+        }
+    }
+
     return (
         <>
             <h1 className="text-4xl font-semibold text-gray-800 dark:text-white">
@@ -89,7 +106,7 @@ export default function Command() {
                                     <tr key={command.id}>
                                         <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
                                             <p className="text-gray-900 whitespace-no-wrap">
-                                                {command.command}
+                                                /{command.command}
                                             </p>
                                         </td>
                                         <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
@@ -121,7 +138,7 @@ export default function Command() {
 
                                                 <span className="w-2"></span>
 
-                                                <button type="button" className="flex justify-center items-center  bg-red-600 hover:bg-red-700 focus:ring-red-500 focus:ring-offset-red-200 text-white transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 w-8 h-8">
+                                                <button type="button" onClick={() => deleteCommand(command)} className="flex justify-center items-center  bg-red-600 hover:bg-red-700 focus:ring-red-500 focus:ring-offset-red-200 text-white transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 w-8 h-8">
                                                     <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-trash" width="15" height="15" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
                                                         <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
                                                         <path d="M4 7l16 0"></path>

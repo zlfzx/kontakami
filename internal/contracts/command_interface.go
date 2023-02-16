@@ -7,4 +7,5 @@ type CommandService interface {
 	GetCommand(id int64) (command models.Command)
 	SaveCommand(command *models.Command) (*models.Command, error)
 	UpdateStatus(id int64, status bool) (command models.Command)
+	DeleteCommand(id int64) error
 }

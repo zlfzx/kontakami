@@ -96,3 +96,24 @@ func PutCommand(w http.ResponseWriter, r *http.Request) {
 		Data:   command,
 	})
 }
+
+func DeleteCommand(w http.ResponseWriter, r *http.Request) {
+	paramId := chi.URLParam(r, "id")
+	id, err := strconv.ParseInt(paramId, 10, 64)
+
+	if err != nil {
+		ResponseError(w, r, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	if err = app.Services.Command.DeleteCommand(id); err != nil {
+		ResponseError(w, r, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	render.JSON(w, r, Response{
+		Status:  "success",
+		Code:    http.StatusOK,
+		Message: "Command deleted",
+	})
+}
