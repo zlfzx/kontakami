@@ -20,7 +20,9 @@ function App() {
       const path = window.location.pathname
 
       if (!path.includes(`/chat/${data.id}`)) {
-        ChatNotification(data)
+        if (!!data.message.user_id) {
+          ChatNotification(data)
+        }
       }
 
       dispatch({ type: 'SET_NEW_CHAT', payload: data })
