@@ -1,6 +1,7 @@
 storage
 frontend/node_modules
 vendor
+tmp
 
 .env
 .vscode
