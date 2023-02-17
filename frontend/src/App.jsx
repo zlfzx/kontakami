@@ -1,5 +1,4 @@
 import { useContext, useEffect } from 'react'
-import './App.css'
 import Sidebar from './layouts/Sidebar'
 import Wrapper from './layouts/Wrapper'
 import { Toaster } from 'react-hot-toast'
@@ -21,7 +20,9 @@ function App() {
       const path = window.location.pathname
 
       if (!path.includes(`/chat/${data.id}`)) {
-        ChatNotification(data)
+        if (!!data.message.user_id) {
+          ChatNotification(data)
+        }
       }
 
       dispatch({ type: 'SET_NEW_CHAT', payload: data })

@@ -2,8 +2,6 @@
 
 export default function Setting() {
 
-    console.log('setting')
-
     return (
         <>
             <h1 className="text-3xl font-semibold text-gray-800 dark:text-white">

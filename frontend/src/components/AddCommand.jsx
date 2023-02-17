@@ -3,16 +3,6 @@ import { Dialog, Transition } from '@headlessui/react'
 import axios from 'axios'
 
 export default function AddCommand({ isOpen, closeModal, setCommands, isEdit, data }) {
-    // let [isOpen, setIsOpen] = useState(false)
-
-    // function closeModal() {
-    //     setIsOpen(false)
-    // }
-
-    // function openModal() {
-    //     setIsOpen(true)
-    // }
-
     const [commandId, setCommandId] = useState('')
     const [command, setCommand] = useState('')
     const [description, setDescription] = useState('')
