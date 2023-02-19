@@ -79,3 +79,21 @@ func (s *Service) setBotCommand() {
 		fmt.Println(err)
 	}
 }
+
+func (s *Service) GetGreeting() (greeting models.Setting) {
+	s.DB.First(&greeting)
+	return
+}
+
+func (s *Service) SaveGreeting(greeting *models.Setting) {
+
+	var setting models.Setting
+	s.DB.First(&setting)
+
+	setting.Greeting = greeting.Greeting
+	setting.GreetingMessage = greeting.GreetingMessage
+
+	s.DB.Save(&setting)
+
+	// s.DB.Model(&greeting).Updates(models.Setting{Greeting: greeting.Greeting, GreetingMessage: greeting.GreetingMessage})
+}

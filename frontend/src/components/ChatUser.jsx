@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { useEffect, useRef, useState } from 'react'
-import { useLoaderData, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import userIcon from '../assets/user.png'
 import BubbleChat from './BubbleChat'
 
@@ -11,28 +11,22 @@ if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
     pathPhoto = '/storage/profiles/'
 }
 
-export async function getChatUser({ params }) {
-    const req = await axios.get(`/api/v1/chat/${params.chatId}`)
-    const chatUser = req.data.data
-
-    console.log('chat user loader')
-
-    return { chatUser }
-}
-
 export default function ChatUser() {
     const { chatId } = useParams()
 
+    const [chat, setChat] = useState({})
     const [messages, setMessages] = useState([])
     const [message, setMessage] = useState('')
 
-    const { chatUser } = useLoaderData()
+    const getChatUsers = async () => {
+        const req = await axios.get(`/api/v1/chat/${chatId}`)
+        const chatUser = req.data.data
 
-    const loadChat = () => {
+        setChat(chatUser)
         setMessages(chatUser?.messages)
     }
-    
-    const profilPhoto = !!chatUser?.profile_photo ? pathPhoto + chatUser.profile_photo : userIcon
+
+    const profilPhoto = !!chat?.profile_photo ? pathPhoto + chat.profile_photo : userIcon
 
     const scrollRef = useRef(null)
     const scrollToBottom = () => {
@@ -65,7 +59,7 @@ export default function ChatUser() {
     }
 
     useEffect(() => {
-        loadChat()
+        getChatUsers()
         scrollToBottom()
         setMessage('')
 
@@ -103,10 +97,10 @@ export default function ChatUser() {
                 </div>
                 <div className="flex-1 pl-1 md:mr-16">
                     <div className="font-medium dark:text-white">
-                        {chatUser?.first_name + ' ' + chatUser?.last_name}
+                        {chat?.first_name + ' ' + chat?.last_name}
                     </div>
                     <div className="text-sm text-gray-600 dark:text-gray-200">
-                        {chatUser?.username}
+                        {chat?.username}
                     </div>
                 </div>
             </div>

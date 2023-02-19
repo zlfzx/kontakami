@@ -9,4 +9,6 @@ type CommandService interface {
 	SaveCommand(command *models.Command) (*models.Command, error)
 	UpdateStatus(id int64, status bool) (command models.Command)
 	DeleteCommand(id int64) error
+	GetGreeting() (greeting models.Setting)
+	SaveGreeting(greeting *models.Setting)
 }

@@ -6,8 +6,6 @@ import Loader from './components/Loader'
 import axios from 'axios'
 import { Suspense } from 'react'
 import { ChatProvider } from './store'
-import { getChatUser } from './components/ChatUser'
-import { getCommands } from './pages/Command'
 
 const App = lazy(() => import('./App'))
 const Dashboard = lazy(() => import('./pages/Dashboard'))
@@ -39,14 +37,12 @@ const router = createBrowserRouter([
           {
             path: ':chatId',
             element: <ChatUser />,
-            loader: getChatUser
           },
         ],
       },
       {
         path: 'command',
         element: <Command />,
-        loader: getCommands
       },
       {
         path: 'setting',

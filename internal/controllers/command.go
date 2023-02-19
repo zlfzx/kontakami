@@ -111,3 +111,34 @@ func DeleteCommand(w http.ResponseWriter, r *http.Request) {
 		Message: "Command deleted",
 	})
 }
+
+func GetGreeting(w http.ResponseWriter, r *http.Request) {
+	greeting := app.Services.Command.GetGreeting()
+
+	render.JSON(w, r, Response{
+		Status: "success",
+		Code:   http.StatusOK,
+		Data:   greeting,
+	})
+}
+
+func PutGreeting(w http.ResponseWriter, r *http.Request) {
+	// greeting := models.Setting{
+	// 	ID: 1,
+	// }
+	// var greeting models.Setting
+
+	greeting := app.Services.Command.GetGreeting()
+	if err := json.NewDecoder(r.Body).Decode(&greeting); err != nil {
+		ResponseError(w, r, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	app.Services.Command.SaveGreeting(&greeting)
+
+	render.JSON(w, r, Response{
+		Status: "success",
+		Code:   http.StatusOK,
+		Data:   greeting,
+	})
+}

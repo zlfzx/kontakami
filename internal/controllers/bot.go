@@ -58,29 +58,54 @@ func InitBot() {
 
 			// command
 			if update.Message.IsCommand() {
-				// list of commands
-				commands := app.Services.Command.GetActiveCommand()
-				for _, command := range commands {
-					if update.Message.Command() == command.Command {
-						msg := tgbotapi.NewMessage(update.Message.Chat.ID, command.Message)
+
+				if update.Message.Command() == "start" {
+					greeting := app.Services.Command.GetGreeting()
+					if greeting.Greeting {
+						msg := tgbotapi.NewMessage(update.Message.Chat.ID, greeting.GreetingMessage)
 						msg.ReplyToMessageID = update.Message.MessageID
 
 						send, _ := bot.Send(msg)
 
 						update.Message.MessageID = send.MessageID
-						update.Message.Text = command.Message
+						update.Message.Text = greeting.GreetingMessage
 						app.Services.Bot.SaveMessage(0, &update)
 
 						botMsg := models.Message{
 							ID:     send.MessageID,
 							ChatID: chat.ID,
-							Text:   command.Message,
+							Text:   greeting.GreetingMessage,
 							Date:   int(time.Now().Unix()),
 						}
 						chat.Message = &botMsg
 						app.Services.ChatSocket.Publish(chat)
 					}
+				} else {
+					// list of commands
+					commands := app.Services.Command.GetActiveCommand()
+					for _, command := range commands {
+						if update.Message.Command() == command.Command {
+							msg := tgbotapi.NewMessage(update.Message.Chat.ID, command.Message)
+							msg.ReplyToMessageID = update.Message.MessageID
+
+							send, _ := bot.Send(msg)
+
+							update.Message.MessageID = send.MessageID
+							update.Message.Text = command.Message
+							app.Services.Bot.SaveMessage(0, &update)
+
+							botMsg := models.Message{
+								ID:     send.MessageID,
+								ChatID: chat.ID,
+								Text:   command.Message,
+								Date:   int(time.Now().Unix()),
+							}
+							chat.Message = &botMsg
+							app.Services.ChatSocket.Publish(chat)
+						}
+					}
 				}
+
 			}
 		}
 
