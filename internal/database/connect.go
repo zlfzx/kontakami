@@ -29,9 +29,11 @@ func Connect() *gorm.DB {
 	if err == nil && db.Migrator().HasTable(&models.Setting{}) {
 		if err := db.First(&models.Setting{}).Error; errors.Is(err, gorm.ErrRecordNotFound) {
 			//Insert seed data
+			botToken := ""
+			timeZone := "Asia/Jakarta"
 			db.Create(&models.Setting{
-				BotToken: "",
-				Timezone: "Asia/Jakarta",
+				BotToken: &botToken,
+				Timezone: &timeZone,
 			})
 		}
 	}

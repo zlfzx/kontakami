@@ -1,17 +1,8 @@
 import { lazy, useEffect, useState } from 'react'
-// import AddCommand from '../components/AddCommand'
 import axios from 'axios'
-import { useLoaderData } from 'react-router-dom'
 
 const AddCommand = lazy(() => import('../components/AddCommand'))
-
-export async function getCommands() {
-    const req = await axios.get('/api/v1/command')
-    const data = req.data
-    const listCommand = data.data
-
-    return { listCommand }
-}
+const GreetingSet = lazy(() => import('../components/GreetingSet'))
 
 export default function Command() {
 
@@ -19,11 +10,21 @@ export default function Command() {
     const [commands, setCommands] = useState([])
     const [isEdit, setIsEdit] = useState(false)
     const [selectedCommand, setSelectedCommand] = useState({})
+    const [loadingCommands, setLoadingCommands] = useState(false)
 
-    const { listCommand } = useLoaderData()
+    const getCommands = async () => {
+        setLoadingCommands(true)
+
+        const req = await axios.get('/api/v1/command')
+        const data = req.data
+        const listCommand = data.data
+
+        setCommands(listCommand)
+        setLoadingCommands(false)
+    }
 
     useEffect(() => {
-        setCommands(listCommand)
+        getCommands()
     }, [])
 
     const setActive = async (id, status) => {
@@ -99,7 +100,6 @@ export default function Command() {
                 Lorem ipsum dolor sit amet consectetur adipisicing elit. Ad voluptatem ab sequi vitae, ratione labore?
             </h2>
 
-
             <button type="button" onClick={modalAddCommand} className="py-2 px-3 flex justify-center items-center  bg-green-600 hover:bg-green-700 focus:ring-green-500 focus:ring-offset-green-200 text-white transition ease-in duration-200 text-center text-sm font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2">
                 <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-pencil-plus" width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
                     <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
@@ -110,29 +110,34 @@ export default function Command() {
                 Add Command
             </button>
 
-
-            <div className="container max-w-3xl">
-                <div className="px-4 py-4 -mx-4 overflow-x-auto sm:-mx-8 sm:px-8">
-                    <div className="inline-block min-w-full overflow-hidden shadow">
-                        <table className="min-w-full leading-normal">
-                            <thead>
+            <div className="flex flex-row items-start gap-5 mt-6">
+                <div className="basis-2/3 bg-white">
+                    <table className="min-w-full leading-normal">
+                        <thead>
+                            <tr>
+                                <th scope="col" className="px-5 py-3 text-sm font-normal text-left text-gray-800 uppercase bg-white border-b border-gray-200">
+                                    Command
+                                </th>
+                                <th scope="col" className="px-5 py-3 text-sm font-normal text-left text-gray-800 uppercase bg-white border-b border-gray-200">
+                                    Message
+                                </th>
+                                <th scope="col" className="px-5 py-3 text-sm font-normal text-left text-gray-800 uppercase bg-white border-b border-gray-200">
+                                    Active
+                                </th>
+                                <th scope="col" className="px-5 py-3 text-sm font-normal text-left text-gray-800 uppercase bg-white border-b border-gray-200">
+                                    &nbsp;
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {loadingCommands ? (
                                 <tr>
-                                    <th scope="col" className="px-5 py-3 text-sm font-normal text-left text-gray-800 uppercase bg-white border-b border-gray-200">
-                                        Command
-                                    </th>
-                                    <th scope="col" className="px-5 py-3 text-sm font-normal text-left text-gray-800 uppercase bg-white border-b border-gray-200">
-                                        Message
-                                    </th>
-                                    <th scope="col" className="px-5 py-3 text-sm font-normal text-left text-gray-800 uppercase bg-white border-b border-gray-200">
-                                        Active
-                                    </th>
-                                    <th scope="col" className="px-5 py-3 text-sm font-normal text-left text-gray-800 uppercase bg-white border-b border-gray-200">
-                                        &nbsp;
-                                    </th>
+                                    <td colSpan={4} className="px-5 py-5 text-sm bg-white border-gray-200 text-gray-500 text-center italic">
+                                        Fetching data...
+                                    </td>
                                 </tr>
-                            </thead>
-                            <tbody>
-                                {commands.length > 0 ? (
+                            ) :
+                                commands.length > 0 ? (
                                     <>
                                         {commands?.map((command) => (
                                             <tr key={command.id}>
@@ -195,9 +200,11 @@ export default function Command() {
                                         </td>
                                     </tr>
                                 )}
-                            </tbody>
-                        </table>
-                    </div>
+                        </tbody>
+                    </table>
+                </div>
+                <div className="basis-1/3 bg-white">
+                    <GreetingSet />
                 </div>
             </div>
 
