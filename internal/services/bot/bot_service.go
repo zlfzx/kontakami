@@ -78,6 +78,10 @@ func (s *Service) SaveMessage(userID int64, update *tgbotapi.Update) (message mo
 		Date:   update.Message.Date,
 	}
 
+	if update.Message.ReplyToMessage != nil && update.Message.ReplyToMessage.MessageID != 0 {
+		message.MessageID = update.Message.ReplyToMessage.MessageID
+	}
+
 	if userID != 0 {
 		message.UserID = &userID
 	}
@@ -86,10 +90,6 @@ func (s *Service) SaveMessage(userID int64, update *tgbotapi.Update) (message mo
 	s.DB.Create(&message)
 
 	return
-}
-
-func publishWs() {
-
 }
 
 func (s *Service) SendMessage(chatID int64, text string) (int, error) {

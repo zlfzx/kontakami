@@ -18,8 +18,15 @@ export default function BubbleChat(props) {
 
     return (
         <div className={"w-full py-2 flex flex-col justify-start " + position}>
-            <div className={bg + " shadow-md px-3 py-2 min-w-min max-w-lg whitespace-pre-wrap text-gray-800"}>
-                { props.children }
+            <div className={bg + " shadow-md px-1 py-1 min-w-min max-w-lg whitespace-pre-wrap"}>
+                {(!!props.replyTo) ? (
+                    <div className={"bg-purple-200 shadow-md px-2 py-1 text-gray-600 border-l-2 border-purple-400"}>
+                        {props.replyTo.text}
+                    </div>
+                ) : ''}
+                <div className="px-2 py-1 text-gray-800">
+                    {props.children}
+                </div>
             </div>
             <span className='text-xs py-1 text-gray-400'>{showCreatedAt}</span>
         </div>

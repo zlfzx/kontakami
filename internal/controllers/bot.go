@@ -67,15 +67,19 @@ func InitBot() {
 
 						send, _ := bot.Send(msg)
 
+						update.Message.ReplyToMessage = &tgbotapi.Message{
+							MessageID: msg.ReplyToMessageID,
+						}
 						update.Message.MessageID = send.MessageID
 						update.Message.Text = greeting.GreetingMessage
 						app.Services.Bot.SaveMessage(0, &update)
 
 						botMsg := models.Message{
-							ID:     send.MessageID,
-							ChatID: chat.ID,
-							Text:   greeting.GreetingMessage,
-							Date:   int(time.Now().Unix()),
+							ID:        send.MessageID,
+							MessageID: msg.ReplyToMessageID,
+							ChatID:    chat.ID,
+							Text:      greeting.GreetingMessage,
+							Date:      int(time.Now().Unix()),
 						}
 						chat.Message = &botMsg
 						app.Services.ChatSocket.Publish(chat)
@@ -90,15 +94,19 @@ func InitBot() {
 
 							send, _ := bot.Send(msg)
 
+							update.Message.ReplyToMessage = &tgbotapi.Message{
+								MessageID: msg.ReplyToMessageID,
+							}
 							update.Message.MessageID = send.MessageID
 							update.Message.Text = command.Message
 							app.Services.Bot.SaveMessage(0, &update)
 
 							botMsg := models.Message{
-								ID:     send.MessageID,
-								ChatID: chat.ID,
-								Text:   command.Message,
-								Date:   int(time.Now().Unix()),
+								ID:        send.MessageID,
+								MessageID: msg.ReplyToMessageID,
+								ChatID:    chat.ID,
+								Text:      command.Message,
+								Date:      int(time.Now().Unix()),
 							}
 							chat.Message = &botMsg
 							app.Services.ChatSocket.Publish(chat)
