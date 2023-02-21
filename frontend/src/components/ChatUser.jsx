@@ -107,11 +107,17 @@ export default function ChatUser() {
 
             <div className="chat h-full px-4 pb-3 overflow-y-auto" ref={scrollRef}>
                 <div className="flex flex-col justify-start items-center w-full">
-                    {messages?.map((message, index) => (
-                        <BubbleChat key={index} message={message}>
-                            {message.text}
-                        </BubbleChat>
-                    ))}
+                    {messages?.map((message, index) => {
+                        let replyTo = null
+                        if (!!message.message_id) {
+                            replyTo = messages.find(m => m.id == message.message_id)
+                        }
+                        return (
+                            <BubbleChat key={index} message={message} replyTo={replyTo}>
+                                {message.text}
+                            </BubbleChat>
+                        )}
+                    )}
                 </div>
             </div>
 
