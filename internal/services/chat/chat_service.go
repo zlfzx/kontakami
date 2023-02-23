@@ -31,7 +31,9 @@ func (s *Service) GetChats() (chats []models.Chat) {
 
 func (s *Service) GetChat(id int64, withMessage bool) (chat models.Chat) {
 	if withMessage {
-		s.DB.Preload("Messages").First(&chat, id)
+		s.DB.Preload("Messages", func(tx *gorm.DB) *gorm.DB {
+			return tx.Preload("File")
+		}).First(&chat, id)
 	} else {
 		s.DB.First(&chat, id)
 	}

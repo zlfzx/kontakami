@@ -113,9 +113,7 @@ export default function ChatUser() {
                             replyTo = messages.find(m => m.id == message.message_id)
                         }
                         return (
-                            <BubbleChat key={index} message={message} replyTo={replyTo}>
-                                {message.text}
-                            </BubbleChat>
+                            <BubbleChat key={index} message={message} replyTo={replyTo} />
                         )}
                     )}
                 </div>

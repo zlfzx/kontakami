@@ -2,10 +2,9 @@ package bot
 
 import (
 	"fmt"
-	"io"
 	"kontakami/internal/contracts"
+	"kontakami/internal/helpers"
 	"kontakami/internal/models"
-	"net/http"
 	"os"
 	"strings"
 
@@ -92,6 +91,13 @@ func (s *Service) SaveMessage(userID int64, update *tgbotapi.Update) (message mo
 	return
 }
 
+func (s *Service) SaveMessageFile(file models.File) models.File {
+
+	s.DB.Create(&file)
+
+	return file
+}
+
 func (s *Service) SendMessage(chatID int64, text string) (int, error) {
 	msg := tgbotapi.NewMessage(chatID, text)
 	message, err := s.Bot.Send(msg)
@@ -135,7 +141,7 @@ func (s *Service) GetUserProfilePhoto(userID int64) *string {
 		}
 		path = fmt.Sprintf("%s/%s", path, filename)
 
-		go downloadFile(path, link)
+		go helpers.DownloadFile(path, link)
 
 		return &filename
 	}
@@ -143,27 +149,27 @@ func (s *Service) GetUserProfilePhoto(userID int64) *string {
 	return nil
 }
 
-func downloadFile(filepath, url string) {
-	// Get the data
-	resp, err := http.Get(url)
-	if err != nil {
-		panic(err)
-	}
-	defer resp.Body.Close()
+// func downloadFile(filepath, url string) {
+// 	// Get the data
+// 	resp, err := http.Get(url)
+// 	if err != nil {
+// 		panic(err)
+// 	}
+// 	defer resp.Body.Close()
 
-	// Create the file
-	out, err := os.Create(filepath)
-	if err != nil {
-		panic(err)
-	}
-	defer out.Close()
+// 	// Create the file
+// 	out, err := os.Create(filepath)
+// 	if err != nil {
+// 		panic(err)
+// 	}
+// 	defer out.Close()
 
-	// Write the body to file
-	_, err = io.Copy(out, resp.Body)
+// 	// Write the body to file
+// 	_, err = io.Copy(out, resp.Body)
 
-	if err != nil {
-		panic(err)
-	}
+// 	if err != nil {
+// 		panic(err)
+// 	}
 
-	fmt.Println("Downloaded", filepath)
-}
+// 	fmt.Println("Downloaded", filepath)
+// }

@@ -23,6 +23,7 @@ func Connect() *gorm.DB {
 		&models.User{},
 		&models.Chat{},
 		&models.Message{},
+		&models.File{},
 		&models.Command{},
 	)
 

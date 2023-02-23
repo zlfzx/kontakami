@@ -1,4 +1,10 @@
 
+let pathFile
+if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
+    pathFile = 'http://localhost:8080/storage/'
+} else {
+    pathFile = '/storage/'
+}
 
 export default function BubbleChat(props) {
 
@@ -16,17 +22,38 @@ export default function BubbleChat(props) {
     let minutes = createdAt.getMinutes() < 10 ? '0' + createdAt.getMinutes() : createdAt.getMinutes()
     showCreatedAt += ' ' + hours + ':' + minutes
 
+    const replyTo = props.replyTo
+
+    const showFile = (message) => {
+        const file = message.file
+        if (!!file) {
+            if (file.type == 'photo') {
+                return (
+                    <img src={pathFile + 'files/photo/' + file.file_name} loading="lazy" className="w-full h-full" />
+                )
+            }
+        }
+    }
+
     return (
         <div className={"w-full py-2 flex flex-col justify-start " + position}>
-            <div className={bg + " shadow-md px-1 py-1 min-w-min max-w-lg whitespace-pre-wrap"}>
-                {(!!props.replyTo) ? (
-                    <div className={"bg-purple-200 shadow-md px-2 py-1 text-gray-600 border-l-2 border-purple-400"}>
-                        {props.replyTo.text}
+            <div className={bg + " shadow-md min-w-min max-w-lg whitespace-pre-wrap"}>
+                {!!replyTo && (
+                    <div className={"bg-purple-200 shadow-md text-gray-600 border-l-2 border-purple-400" + (!!replyTo.file ? ' mx-2 mt-2' : ' mx-1 mt-1')}>
+                        {showFile(replyTo)}
+                        {!!replyTo.text && (
+                            <div className="px-2 py-1">
+                                {replyTo.text}
+                            </div>
+                        )}
                     </div>
-                ) : ''}
-                <div className="px-2 py-1 text-gray-800">
-                    {props.children}
-                </div>
+                )}
+                {showFile(message)}
+                {!!message.text && (
+                    <div className="px-2 py-1 mx-1 text-gray-800">
+                        {message.text}
+                    </div>
+                )}
             </div>
             <span className='text-xs py-1 text-gray-400'>{showCreatedAt}</span>
         </div>
