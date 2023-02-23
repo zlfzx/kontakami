@@ -2,8 +2,10 @@ package controllers
 
 import (
 	"fmt"
+	"kontakami/internal/helpers"
 	"kontakami/internal/models"
 	"os"
+	"strings"
 	"time"
 
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
@@ -117,9 +119,59 @@ func InitBot() {
 			}
 		}
 
+		receiveImage(update)
+
 		// msg := tgbotapi.NewMessage(update.Message.Chat.ID, update.Message.Text)
 		// msg.ReplyToMessageID = update.Message.MessageID
 
 		// bot.Send(msg)
+	}
+}
+
+func receiveImage(update tgbotapi.Update) {
+
+	if update.Message.Photo != nil {
+		photo := update.Message.Photo[len(update.Message.Photo)-1]
+		getFile, _ := app.Bot.GetFile(tgbotapi.FileConfig{
+			FileID: photo.FileID,
+		})
+
+		link := getFile.Link(app.BotToken)
+
+		ext := strings.Split(getFile.FilePath, ".")[1]
+		filename := fmt.Sprintf("%s.%s", getFile.FileUniqueID, ext)
+		path := "storage/files/photo"
+
+		if err := os.MkdirAll(path, os.ModePerm); err != nil {
+			panic(err)
+		}
+		path = fmt.Sprintf("%s/%s", path, filename)
+
+		go helpers.DownloadFile(path, link)
+
+		// user
+		user := app.Services.Bot.SaveUser(&update)
+
+		// chat
+		chat := app.Services.Bot.SaveChat(&update)
+
+		// message
+		if update.Message.Caption != "" {
+			update.Message.Text = update.Message.Caption
+		}
+		msg := app.Services.Bot.SaveMessage(user.ID, &update)
+		file := models.File{
+			MessageID:    msg.ID,
+			Type:         models.FileTypePhoto,
+			FileName:     filename,
+			FileID:       getFile.FileID,
+			FileUniqueID: getFile.FileUniqueID,
+			FileSize:     getFile.FileSize,
+		}
+		file = app.Services.Bot.SaveMessageFile(file)
+
+		msg.File = &file
+		chat.Message = &msg
+		app.Services.ChatSocket.Publish(chat)
 	}
 }
