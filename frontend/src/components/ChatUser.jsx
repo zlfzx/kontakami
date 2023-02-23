@@ -11,12 +11,20 @@ if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
     pathPhoto = '/storage/profiles/'
 }
 
+let pathFile
+if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
+    pathFile = 'http://localhost:8080/storage/'
+} else {
+    pathFile = '/storage/'
+}
+
 export default function ChatUser() {
     const { chatId } = useParams()
 
     const [chat, setChat] = useState({})
     const [messages, setMessages] = useState([])
     const [message, setMessage] = useState('')
+    const [replyTo, setReplyTo] = useState({})
 
     const getChatUsers = async () => {
         const req = await axios.get(`/api/v1/chat/${chatId}`)
@@ -37,15 +45,22 @@ export default function ChatUser() {
         e.preventDefault()
         if (message == '') return
 
-        await axios.post(`/api/v1/chat/${chatId}`, {
+        let data = {
             text: message
-        }).then((res) => {
+        }
+
+        if (!!replyTo.id) {
+            data.message_id = replyTo.id
+        }
+
+        await axios.post(`/api/v1/chat/${chatId}`, data).then((res) => {
             console.log(res)
             const data = res.data
             const msg = data.data
 
             setMessages(messages => [...messages, msg])
             setMessage('')
+            setReplyTo({})
         }).catch((err) => {
             console.log(err)
         })
@@ -56,6 +71,18 @@ export default function ChatUser() {
             e.preventDefault()
             sendChat(e)
         }
+    }
+
+    const onClickBubble = (e, message) => {
+        // console.log(e, message)
+        if (e.detail == 2) {
+            console.log('double click', message)
+            setReplyTo(message)
+        }
+    }
+
+    const closeReply = () => {
+        setReplyTo({})
     }
 
     useEffect(() => {
@@ -113,13 +140,43 @@ export default function ChatUser() {
                             replyTo = messages.find(m => m.id == message.message_id)
                         }
                         return (
-                            <BubbleChat key={index} message={message} replyTo={replyTo} />
-                        )}
+                            <BubbleChat key={index} message={message} replyTo={replyTo} onClickBubble={(e) => onClickBubble(e, message)} />
+                        )
+                    }
                     )}
                 </div>
             </div>
 
             <div className="w-full bg-gray-100 px-4 py-5">
+                {!!replyTo.id && (
+                    <div className="text-gray-500 flex items-center justify-between mb-5">
+                        <div className="flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-corner-up-left" width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                <path d="M18 18v-6a3 3 0 0 0 -3 -3h-10l4 -4m0 8l-4 -4"></path>
+                            </svg>
+                        </div>
+                        <div className="w-full px-4 text-left flex">
+                            {!!replyTo.file && replyTo.file.type == 'photo' && (
+                                <div className="mr-3">
+                                    <img src={pathFile + 'files/photo/' + replyTo.file.file_name} alt="" className="w-10" loading="lazy" />
+                                </div>
+                            )}
+                            <div>
+                                {replyTo.text}
+                            </div>
+                        </div>
+                        <div className="flex items-center">
+                            <button onClick={closeReply}>
+                                <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-x" width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                    <path d="M18 6l-12 12"></path>
+                                    <path d="M6 6l12 12"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                )}
                 <form className="bg-white shadow rounded flex" onSubmit={sendChat}>
                     <div className="flex-1">
                         <textarea name="" rows="1" className="w-full block outline-none py-3 px-4 bg-transparent focus:border-purple-500 resize-none" placeholder="Type a message..." value={message} onChange={e => setMessage(e.target.value)} onKeyDown={onEnterPress}></textarea>
