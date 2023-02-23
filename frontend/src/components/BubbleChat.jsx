@@ -36,7 +36,7 @@ export default function BubbleChat(props) {
     }
 
     return (
-        <div className={"w-full py-2 flex flex-col justify-start " + position}>
+        <div className={"w-full py-2 flex flex-col justify-start " + position} onClick={(e) => props.onClickBubble(e, message)}>
             <div className={bg + " shadow-md min-w-min max-w-lg whitespace-pre-wrap"}>
                 {!!replyTo && (
                     <div className={"bg-purple-200 shadow-md text-gray-600 border-l-2 border-purple-400" + (!!replyTo.file ? ' mx-2 mt-2' : ' mx-1 mt-1')}>

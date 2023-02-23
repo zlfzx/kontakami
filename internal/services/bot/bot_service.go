@@ -98,15 +98,18 @@ func (s *Service) SaveMessageFile(file models.File) models.File {
 	return file
 }
 
-func (s *Service) SendMessage(chatID int64, text string) (int, error) {
-	msg := tgbotapi.NewMessage(chatID, text)
-	message, err := s.Bot.Send(msg)
+func (s *Service) SendMessage(chatID int64, message models.Message) (int, error) {
+	msg := tgbotapi.NewMessage(chatID, message.Text)
+	if message.MessageID != 0 {
+		msg.ReplyToMessageID = message.MessageID
+	}
+	sendMsg, err := s.Bot.Send(msg)
 
 	if err != nil {
 		return 0, err
 	}
 
-	return message.MessageID, nil
+	return sendMsg.MessageID, nil
 }
 
 func (s *Service) GetUserProfilePhoto(userID int64) *string {

@@ -52,7 +52,7 @@ func (s *Service) SaveMessage(chatID int64, message *models.Message) (*models.Me
 		return message, errors.New("message text is empty")
 	}
 
-	messageID, err := s.Services.Bot.SendMessage(chatID, message.Text)
+	messageID, err := s.Services.Bot.SendMessage(chatID, *message)
 	if err != nil {
 		return message, err
 	}
