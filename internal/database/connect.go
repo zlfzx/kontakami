@@ -2,7 +2,9 @@ package database
 
 import (
 	"errors"
+	"fmt"
 	"kontakami/internal/models"
+	"os"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -10,7 +12,14 @@ import (
 
 func Connect() *gorm.DB {
 
-	dsn := "root@tcp(127.0.0.1:3306)/kontakami"
+	// Connect to database
+	host := os.Getenv("DB_HOST")
+	port := os.Getenv("DB_PORT")
+	user := os.Getenv("DB_USER")
+	password := os.Getenv("DB_PASSWD")
+	dbName := os.Getenv("DB_NAME")
+
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", user, password, host, port, dbName)
 
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
