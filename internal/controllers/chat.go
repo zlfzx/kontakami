@@ -2,12 +2,15 @@ package controllers
 
 import (
 	"context"
-	"encoding/json"
 	"errors"
+	"fmt"
+	"io"
 	"kontakami/internal/models"
 	"log"
 	"net/http"
+	"os"
 	"strconv"
+	"strings"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/render"
@@ -63,8 +66,16 @@ func PostChat(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var message models.Message
+	message.Text = r.FormValue("text")
 
-	if err := json.NewDecoder(r.Body).Decode(&message); err != nil {
+	msgID, _ := strconv.ParseInt(r.FormValue("message_id"), 10, 64)
+	if msgID != 0 {
+		message.MessageID = int(msgID)
+	}
+
+	f, h, errFile := r.FormFile("file")
+
+	if errFile != nil && message.Text == "" {
 		render.Status(r, http.StatusBadRequest)
 		render.JSON(w, r, Response{
 			Status:  "error",
@@ -74,7 +85,49 @@ func PostChat(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	app.Services.Chat.SaveMessage(id, &message)
+	if errFile == nil {
+		defer f.Close()
+
+		path := "storage/files/photo"
+		_ = os.MkdirAll(path, os.ModePerm)
+		path = path + "/" + h.Filename
+
+		file, err := os.Create(path)
+		if err != nil {
+			panic(err)
+		}
+		defer file.Close()
+
+		_, err = io.Copy(file, f)
+		if err != nil {
+			panic(err)
+		}
+
+		fmt.Println("File uploaded successfully: " + path)
+
+		var fileType string
+		mimeType := h.Header.Get("Content-Type")
+		if strings.Split(mimeType, "/")[0] == "image" {
+			fileType = "photo"
+		}
+
+		message.File = &models.File{
+			Type:     fileType,
+			FileName: h.Filename,
+			MimeType: &mimeType,
+		}
+	}
+
+	_, err = app.Services.Chat.SaveMessage(id, &message)
+	if err != nil {
+		render.Status(r, http.StatusInternalServerError)
+		render.JSON(w, r, Response{
+			Status:  "error",
+			Code:    http.StatusInternalServerError,
+			Message: err.Error(),
+		})
+		return
+	}
 
 	render.JSON(w, r, Response{
 		Status: "success",

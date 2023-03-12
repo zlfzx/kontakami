@@ -4,6 +4,7 @@ const initialState = {
     chats: [],
     messages: [],
     newChat: null,
+    replyTo: null,
 };
 
 export const ChatContext = createContext(initialState);
@@ -26,6 +27,11 @@ export const ChatProvider = ({ children }) => {
                 return {
                     ...state,
                     newChat: action.payload,
+                };
+            case "SET_REPLY_TO":
+                return {
+                    ...state,
+                    replyTo: action.payload,
                 };
             default:
                 return state;

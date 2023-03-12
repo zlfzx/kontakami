@@ -98,18 +98,58 @@ func (s *Service) SaveMessageFile(file models.File) models.File {
 	return file
 }
 
-func (s *Service) SendMessage(chatID int64, message models.Message) (int, error) {
-	msg := tgbotapi.NewMessage(chatID, message.Text)
-	if message.MessageID != 0 {
-		msg.ReplyToMessageID = message.MessageID
-	}
-	sendMsg, err := s.Bot.Send(msg)
+func (s *Service) SendMessage(chatID int64, message *models.Message) (int, error) {
 
-	if err != nil {
-		return 0, err
+	if message.Text != "" && message.File == nil {
+		msg := tgbotapi.NewMessage(chatID, message.Text)
+		if message.MessageID != 0 {
+			msg.ReplyToMessageID = message.MessageID
+		}
+		sendMsg, err := s.Bot.Send(msg)
+
+		if err != nil {
+			return 0, err
+		}
+		return sendMsg.MessageID, nil
+	} else {
+		if message.File.Type == "photo" {
+			file := tgbotapi.FilePath("storage/files/photo/" + message.File.FileName)
+			msg := tgbotapi.NewPhoto(chatID, file)
+			if message.MessageID != 0 {
+				msg.ReplyToMessageID = message.MessageID
+			}
+			if message.Text != "" {
+				msg.Caption = message.Text
+			}
+			sendMsg, err := s.Bot.Send(msg)
+			if err != nil {
+				return 0, err
+			}
+
+			photo := sendMsg.Photo[len(sendMsg.Photo)-1]
+
+			splitFileExt := strings.Split(message.File.FileName, ".")
+			fileExt := splitFileExt[len(splitFileExt)-1]
+
+			newFileName := fmt.Sprintf("%s.%s", photo.FileUniqueID, fileExt)
+
+			path := fmt.Sprintf("storage/files/photo/%s", message.File.FileName)
+			newPath := fmt.Sprintf("storage/files/photo/%s", newFileName)
+			err = os.Rename(path, newPath)
+			if err != nil {
+				fmt.Println(err)
+			}
+			message.File.FileName = newFileName
+
+			message.File.FileID = photo.FileID
+			message.File.FileUniqueID = photo.FileUniqueID
+			message.File.FileSize = photo.FileSize
+
+			return sendMsg.MessageID, nil
+		}
 	}
 
-	return sendMsg.MessageID, nil
+	return 0, nil
 }
 
 func (s *Service) GetUserProfilePhoto(userID int64) *string {

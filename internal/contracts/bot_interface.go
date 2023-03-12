@@ -12,6 +12,6 @@ type BotService interface {
 	SaveChat(update *tgbotapi.Update) (chat models.Chat)
 	SaveMessage(userID int64, update *tgbotapi.Update) (message models.Message)
 	SaveMessageFile(file models.File) models.File
-	SendMessage(chatID int64, message models.Message) (int, error)
+	SendMessage(chatID int64, message *models.Message) (int, error)
 	GetUserProfilePhoto(userID int64) *string
 }
