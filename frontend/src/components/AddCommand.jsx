@@ -107,19 +107,19 @@ export default function AddCommand({ isOpen, closeModal, setCommands, isEdit, da
                                                 <label htmlFor="form-command" className="block text-sm font-medium text-gray-500">Command</label>
                                                 <div className="mt-1 flex shadow-sm">
                                                     <span className="inline-flex items-center border border-r-0 border-gray-300 bg-gray-50 px-3 text-sm text-gray-500">/</span>
-                                                    <input type="text" name="command" value={command} onChange={(e) => setCommand(e.target.value)} id="form-command" className="block w-full flex-1 rounded-none border-gray-300 focus:border-purple-500 focus:ring-0  sm:text-sm" placeholder="command" required />
+                                                    <input type="text" name="command" value={command} onChange={(e) => setCommand(e.target.value)} id="form-command" className="block w-full flex-1 rounded-none border-gray-300 focus:border-blue-500 focus:ring-0  sm:text-sm" placeholder="command" required />
                                                 </div>
                                             </div>
 
                                             <div>
                                                 <label htmlFor="form-description" className="block text-sm font-medium text-gray-500">Description</label>
-                                                <input type="text" name="description" value={description} onChange={(e) => setDescription(e.target.value)} id="form-description" className="block w-full flex-1 rounded-none border-gray-300 focus:border-purple-500 focus:ring-0  sm:text-sm" placeholder="command description" required />
+                                                <input type="text" name="description" value={description} onChange={(e) => setDescription(e.target.value)} id="form-description" className="block w-full flex-1 rounded-none border-gray-300 focus:border-blue-500 focus:ring-0  sm:text-sm" placeholder="command description" required />
                                             </div>
 
                                             <div>
                                                 <label htmlFor="message" className="block text-sm font-medium text-gray-500">Message</label>
                                                 <div className="mt-1">
-                                                    <textarea id="message" name="message" value={message} onChange={(e) => setMessage(e.target.value)} rows="3" className="mt-1 px-2 py-1 block w-full border-gray-300 shadow-sm focus:border-purple-500 focus:ring-0 sm:text-sm" placeholder="lorem ipsum dolor sit amet" required></textarea>
+                                                    <textarea id="message" name="message" value={message} onChange={(e) => setMessage(e.target.value)} rows="3" className="mt-1 px-2 py-1 block w-full border-gray-300 shadow-sm focus:border-blue-500 focus:ring-0 sm:text-sm" placeholder="lorem ipsum dolor sit amet" required></textarea>
                                                 </div>
                                             </div>
 
@@ -133,7 +133,7 @@ export default function AddCommand({ isOpen, closeModal, setCommands, isEdit, da
                                                 </button>
                                                 <button
                                                     type="submit"
-                                                    className="inline-flex justify-center border border-transparent bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2"
+                                                    className="inline-flex justify-center border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
                                                 >
                                                     Save
                                                 </button>

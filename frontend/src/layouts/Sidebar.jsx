@@ -3,7 +3,7 @@ import { NavLink } from "react-router-dom";
 export default function Sidebar() {
 
     let classLink = "flex items-center justify-start w-full p-2 pl-6 my-2 "
-    const classActive = "text-gray-800 transition-colors duration-200 border-l-4 border-purple-500 dark:text-white"
+    const classActive = "text-gray-800 transition-colors duration-200 border-l-4 border-blue-500 dark:text-white"
     const classPending = "text-gray-400 transition-colors duration-200 border-l-4 border-transparent hover:text-gray-800"
 
     const styleLink = ({ isActive, isPending }) => {

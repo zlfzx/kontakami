@@ -114,6 +114,23 @@ export default function ChatUser() {
         scrollToBottom()
     }, [messages])
 
+    const [selectedFile, setSelectedFile] = useState(null)
+    const [tempImage, setTempImage] = useState(null)
+
+    const onSelectFile = (e) => {
+        const file = e.target.files[0]
+        
+        if (!file) return
+
+        setSelectedFile(file)
+        setTempImage(URL.createObjectURL(file))
+    }
+
+    const closePreview = () => {
+        setSelectedFile(null)
+        setTempImage(null)
+    }
+
     return (
         <>
             <div className="w-full px-4 py-5 border-b sm:px-6 flex flex-row">
@@ -177,12 +194,39 @@ export default function ChatUser() {
                         </div>
                     </div>
                 )}
-                <form className="bg-white shadow rounded flex" onSubmit={sendChat}>
-                    <div className="flex-1">
-                        <textarea name="" rows="1" className="w-full block outline-none py-3 px-4 bg-transparent focus:border-purple-500 resize-none" placeholder="Type a message..." value={message} onChange={e => setMessage(e.target.value)} onKeyDown={onEnterPress}></textarea>
+                {!!tempImage && (
+                    <div className="text-gray-500 flex items-center justify-between mb-3">
+                        <div className="w-full">
+                            <img src={tempImage} alt="" className="w-1/3" loading="lazy" />
+                        </div>
+                        <div className="flex items-center">
+                            <button onClick={closePreview}>
+                                <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-x" width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                    <path d="M18 6l-12 12"></path>
+                                    <path d="M6 6l12 12"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                )}
+                <form className="bg-white shadow flex" onSubmit={sendChat}>
+                    <div className="flex-1 flex items-center">
+                        <div className="pl-4 text-gray-500 cursor-pointer">
+                            <div className="relative inline-block w-full text-center cursor-pointer">
+                                <label htmlFor="file" className="text-gray-500 cursor-pointer">
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-paperclip inline-block" width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                        <path d="M15 7l-6.5 6.5a1.5 1.5 0 0 0 3 3l6.5 -6.5a3 3 0 0 0 -6 -6l-6.5 6.5a4.5 4.5 0 0 0 9 9l6.5 -6.5"></path>
+                                    </svg>
+                                </label>
+                                <input id="file" onChange={onSelectFile} name="file" type="file" className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" />
+                            </div>
+                        </div>
+                        <textarea name="" rows="1" className="w-full block outline-none py-3 px-4 bg-transparent border-none  focus:ring-0 resize-none" placeholder="Type a message..." value={message} onChange={e => setMessage(e.target.value)} onKeyDown={onEnterPress}></textarea>
                     </div>
                     <div className="flex-2 flex justify-center">
-                        <button type="submit" className="w-full py-3 px-4 bg-purple-600 hover:bg-purple-700 focus:ring-0 focus:ring-offset-purple-200 text-white transition ease-in duration-200 text-center shadow focus:outline-none">Send</button>
+                        <button type="submit" className="w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 focus:ring-0 focus:ring-offset-blue-200 text-white transition ease-in duration-200 text-center shadow focus:outline-none">Send</button>
                     </div>
                 </form>
             </div>

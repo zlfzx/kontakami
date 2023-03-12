@@ -10,7 +10,7 @@ export default function BubbleChat(props) {
 
     const message = props.message
     const position = !!message.user_id ? 'items-start' : 'items-end'
-    const bg = position == 'items-start' ? 'bg-purple-100' : 'bg-purple-300'
+    const bg = position == 'items-start' ? 'bg-blue-100' : 'bg-blue-300'
 
     const createdAt = !!message.date ? new Date(message.date * 1000) : new Date()
     let date = createdAt.getDate() < 10 ? '0' + createdAt.getDate() : createdAt.getDate()
@@ -39,7 +39,7 @@ export default function BubbleChat(props) {
         <div className={"w-full py-2 flex flex-col justify-start " + position} onClick={(e) => props.onClickBubble(e, message)}>
             <div className={bg + " shadow-md min-w-min max-w-lg whitespace-pre-wrap"}>
                 {!!replyTo && (
-                    <div className={"bg-purple-200 shadow-md text-gray-600 border-l-2 border-purple-400" + (!!replyTo.file ? ' mx-2 mt-2' : ' mx-1 mt-1')}>
+                    <div className={"bg-blue-200 shadow-md text-gray-600 border-l-2 border-blue-400" + (!!replyTo.file ? ' mx-2 mt-2' : ' mx-1 mt-1')}>
                         {showFile(replyTo)}
                         {!!replyTo.text && (
                             <div className="px-2 py-1">

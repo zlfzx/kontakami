@@ -100,7 +100,7 @@ export default function Command() {
                 Lorem ipsum dolor sit amet consectetur adipisicing elit. Ad voluptatem ab sequi vitae, ratione labore?
             </h2>
 
-            <button type="button" onClick={modalAddCommand} className="py-2 px-3 flex justify-center items-center  bg-green-600 hover:bg-green-700 focus:ring-green-500 focus:ring-offset-green-200 text-white transition ease-in duration-200 text-center text-sm font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2">
+            <button type="button" onClick={modalAddCommand} className="py-2 px-3 flex justify-center items-center  bg-blue-600 hover:bg-blue-700 focus:ring-blue-500 focus:ring-offset-blue-200 text-white transition ease-in duration-200 text-center text-sm font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2">
                 <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-pencil-plus" width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
                     <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
                     <path d="M8 20l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4h4z"></path>
@@ -155,7 +155,7 @@ export default function Command() {
                                                 <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
                                                     <div className="relative inline-block w-10 mr-2 align-middle select-none">
                                                         <input type="checkbox" name="toggle" id={`check` + command.id}
-                                                            className="checked:bg-green-500 outline-none focus:outline-none right-4 checked:right-0 duration-200 ease-in absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer"
+                                                            className="checked:bg-blue-500 outline-none focus:outline-none right-4 checked:right-0 duration-200 ease-in absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer"
                                                             checked={command.is_active ? 'checked' : ''}
                                                             onChange={() => setActive(command.id, !command.is_active)}
                                                         />
