@@ -131,14 +131,17 @@ export default function ChatForm({ chatId }) {
             <form className="bg-white shadow flex" onSubmit={sendChat}>
                 <div className="flex-1 flex items-center">
                     <div className="pl-4 text-gray-500 cursor-pointer">
-                        <div className="relative inline-block w-full text-center cursor-pointer">
-                            <label htmlFor="file" className="text-gray-500 cursor-pointer">
-                                <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-paperclip inline-block" width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
-                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                                    <path d="M15 7l-6.5 6.5a1.5 1.5 0 0 0 3 3l6.5 -6.5a3 3 0 0 0 -6 -6l-6.5 6.5a4.5 4.5 0 0 0 9 9l6.5 -6.5"></path>
+                        <div class="flex w-full items-center justify-center">
+                            <label class="flex flex-col items-center cursor-pointer" title="Upload Image">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" strokeWidth="1.5" stroke="#2c3e50" fill="none" strokeLinecap="round" strokeLinejoin="round">
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                    <line x1="15" y1="8" x2="15.01" y2="8" />
+                                    <rect x="4" y="4" width="16" height="16" rx="3" />
+                                    <path d="M4 15l4 -4a3 5 0 0 1 3 0l5 5" />
+                                    <path d="M14 14l1 -1a3 5 0 0 1 3 0l2 2" />
                                 </svg>
+                                <input type='file' onChange={onSelectFile} accept="image/*" class="hidden" />
                             </label>
-                            <input id="file" onChange={onSelectFile} accept="image/*" name="file" type="file" className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" />
                         </div>
                     </div>
                     <textarea name="" rows="1" className="w-full block outline-none py-3 px-4 bg-transparent border-none  focus:ring-0 resize-none" placeholder="Type a message..." value={message} onChange={e => setMessage(e.target.value)} onKeyDown={onEnterPress}></textarea>
