@@ -1,3 +1,5 @@
+import { useContext } from "react"
+import { ChatContext } from "../store"
 
 let pathFile
 if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
@@ -7,6 +9,8 @@ if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
 }
 
 export default function BubbleChat(props) {
+
+    const [state, dispatch] = useContext(ChatContext)
 
     const message = props.message
     const position = !!message.user_id ? 'items-start' : 'items-end'
@@ -29,14 +33,18 @@ export default function BubbleChat(props) {
         if (!!file) {
             if (file.type == 'photo') {
                 return (
-                    <img src={pathFile + 'files/photo/' + file.file_name} loading="lazy" className="w-full h-full" />
+                    <img src={pathFile + 'files/photo/' + file.file_name} loading="lazy" className="w-full h-full select-none" />
                 )
             }
         }
     }
 
+    const clickBubble = () => {
+        dispatch({ type: 'SET_REPLY_TO', payload: message })
+    }
+
     return (
-        <div className={"w-full py-2 flex flex-col justify-start " + position} onClick={(e) => props.onClickBubble(e, message)}>
+        <div className={"w-full py-2 flex flex-col justify-start " + position} onDoubleClick={clickBubble}>
             <div className={bg + " shadow-md min-w-min max-w-lg whitespace-pre-wrap"}>
                 {!!replyTo && (
                     <div className={"bg-blue-200 shadow-md text-gray-600 border-l-2 border-blue-400" + (!!replyTo.file ? ' mx-2 mt-2' : ' mx-1 mt-1')}>
@@ -55,7 +63,7 @@ export default function BubbleChat(props) {
                     </div>
                 )}
             </div>
-            <span className='text-xs py-1 text-gray-400'>{showCreatedAt}</span>
+            <span className='text-xs py-1 text-gray-400 select-none'>{showCreatedAt}</span>
         </div>
     )
 }

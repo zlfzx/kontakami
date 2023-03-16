@@ -34,12 +34,6 @@ export default function ChatUser() {
         scrollRef.current.scrollTop = scrollRef.current.scrollHeight
     }
 
-    const onClickBubble = (e, message) => {
-        if (e.detail == 2) {
-            dispatch({ type: 'SET_REPLY_TO', payload: message })
-        }
-    }
-
     useEffect(() => {
         getChatUsers()
         scrollToBottom()
@@ -94,7 +88,7 @@ export default function ChatUser() {
                             replyTo = state.messages.find(m => m.id == message.message_id)
                         }
                         return (
-                            <BubbleChat key={index} message={message} replyTo={replyTo} onClickBubble={(e) => onClickBubble(e, message)} />
+                            <BubbleChat key={index} message={message} replyTo={replyTo} />
                         )
                     }
                     )}
