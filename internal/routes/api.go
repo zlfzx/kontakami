@@ -27,6 +27,7 @@ func api() (r *chi.Mux) {
 		r.Get("/chat", controllers.GetChats)
 		r.Get("/chat/{id}", controllers.GetChat)
 		r.Post("/chat/{id}", controllers.PostChat)
+		r.Post("/chat/{id}/read", controllers.ReadChat)
 
 		r.Get("/command", controllers.GetCommands)
 		r.Post("/command", controllers.PostCommand)

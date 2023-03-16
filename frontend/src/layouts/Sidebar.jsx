@@ -45,7 +45,7 @@ export default function Sidebar() {
                             </span>
                             <span className="mx-2 text-sm font-normal">
                                 Conversation
-                                <span className="w-4 h-2 p-1 ml-4 text-xs text-gray-400 bg-gray-200 rounded-lg">
+                                <span className="w-4 h-2 p-1 ml-4 text-xs text-gray-400 bg-gray-200 rounded">
                                     0
                                 </span>
                             </span>

@@ -25,6 +25,10 @@ export default function ChatUser() {
 
         setChat(chatUser)
         dispatch({ type: 'SET_MESSAGES', payload: chatUser?.messages })
+
+        if (!!chatUser?.unread_messages && chatUser?.unread_messages > 0) {
+            axios.post(`/api/v1/chat/${chatUser.id}/read`)
+        }
     }
 
     const profilPhoto = !!chat?.profile_photo ? pathPhoto + chat.profile_photo : userIcon

@@ -26,6 +26,10 @@ func (s *Service) GetChats() (chats []models.Chat) {
 		return tx.Order("messages.date ASC")
 	}).Order("last_sent DESC").Find(&chats)
 
+	for i := range chats {
+		chats[i].UnreadMessages = s.GetUnreadMessages(chats[i].ID)
+	}
+
 	return
 }
 
@@ -37,6 +41,8 @@ func (s *Service) GetChat(id int64, withMessage bool) (chat models.Chat) {
 	} else {
 		s.DB.First(&chat, id)
 	}
+
+	chat.UnreadMessages = s.GetUnreadMessages(chat.ID)
 
 	return
 }
@@ -70,6 +76,18 @@ func (s *Service) GetMessage(chatID int64) (chat models.Chat) {
 	s.DB.Preload("Message", func(tx *gorm.DB) *gorm.DB {
 		return tx.Order("date ASC")
 	}).Where("id = ?", chatID).First(&chat)
+
+	return
+}
+
+func (s *Service) GetUnreadMessages(chatID int64) (count int64) {
+	s.DB.Model(&models.Message{}).Where("chat_id = ? AND seen_at IS NULL", chatID).Count(&count)
+
+	return
+}
+
+func (s *Service) ReadChat(chatID int64) (err error) {
+	err = s.DB.Model(&models.Message{}).Where("chat_id = ? AND seen_at IS NULL", chatID).Update("seen_at", time.Now().Unix()).Error
 
 	return
 }

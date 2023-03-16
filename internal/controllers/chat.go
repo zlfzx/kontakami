@@ -136,6 +136,30 @@ func PostChat(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
+func ReadChat(w http.ResponseWriter, r *http.Request) {
+	idParam := chi.URLParam(r, "id")
+	id, _ := strconv.ParseInt(idParam, 10, 64)
+
+	chat := app.Services.Chat.GetChat(id, false)
+
+	if chat.ID == 0 {
+		render.Status(r, http.StatusNotFound)
+		render.JSON(w, r, Response{
+			Status:  "error",
+			Code:    http.StatusNotFound,
+			Message: "Chat not found",
+		})
+		return
+	}
+
+	app.Services.Chat.ReadChat(id)
+
+	render.JSON(w, r, Response{
+		Status: "success",
+		Code:   http.StatusOK,
+	})
+}
+
 func ChatSocket(w http.ResponseWriter, r *http.Request) {
 	idParam := chi.URLParam(r, "id")
 	id, _ := strconv.Atoi(idParam)

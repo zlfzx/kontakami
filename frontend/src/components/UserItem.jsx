@@ -18,8 +18,14 @@ export default function UserItem({ chat }) {
         lastSent = (lastSentDate.getHours() < 10 ? '0' + lastSentDate.getHours() : lastSentDate.getHours()) + ':' + (lastSentDate.getMinutes() < 10 ? '0' + lastSentDate.getMinutes() : lastSentDate.getMinutes())
     }
 
+    const clickItem = () => {
+        if (!!chat.unread_messages) {
+            chat.unread_messages = 0
+        }
+    }
+
     return (
-        <NavLink to={`${chat.id}`} className="flex flex-row">
+        <NavLink to={`${chat.id}`} className="flex flex-row" onClick={clickItem}>
             <div className="flex items-center flex-1 p-4 cursor-pointer select-none hover:bg-gray-100">
                 <div className="flex flex-col items-center justify-center w-10 h-10 mr-4">
                     <span className="relative block">
@@ -35,7 +41,14 @@ export default function UserItem({ chat }) {
                     </div>
                 </div>
                 <div className="text-xs text-gray-600 dark:text-gray-200">
-                    {lastSent}
+                    <div>{lastSent}</div>
+                    {!!chat.unread_messages && chat.unread_messages > 0 &&
+                        <div className='mt-1 text-right'>
+                            <span className="w-4 h-2 p-1 text-xs text-gray-500 bg-gray-200 rounded">
+                                {chat.unread_messages}
+                            </span>
+                        </div>
+                    }
                 </div>
             </div>
         </NavLink>
