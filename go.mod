@@ -22,3 +22,5 @@ require (
 	gorm.io/driver/mysql v1.4.5
 	gorm.io/gorm v1.24.3
 )
+
+replace golang.org/x/sys => golang.org/x/sys v0.1.0
