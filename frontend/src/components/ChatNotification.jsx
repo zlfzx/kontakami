@@ -1,7 +1,6 @@
 import toast from 'react-hot-toast';
 import userIcon from '../assets/user.png'
 import { NavLink } from 'react-router-dom';
-import notifSound from '../assets/sounds/telegram.mp3'
 
 let pathPhoto
 if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {

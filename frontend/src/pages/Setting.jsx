@@ -7,6 +7,56 @@ export default function Setting() {
             <h1 className="text-3xl font-semibold text-gray-800 dark:text-white">
                 Setting
             </h1>
+            <div className="flex flex-row items-start gap-5 mt-6">
+                <div className="basis-2/3 bg-white">
+                    <table className="min-w-full leading-normal">
+                        <thead>
+                            <tr>
+                                <th scope="col" className="px-5 py-3 text-sm font-normal text-left text-gray-800 uppercase bg-white border-b border-gray-200">
+                                    Name
+                                </th>
+                                <th scope="col" className="px-5 py-3 text-sm font-normal text-left text-gray-800 uppercase bg-white border-b border-gray-200">
+                                    Email
+                                </th>
+                                <th scope="col" className="px-5 py-3 text-sm font-normal text-left text-gray-800 uppercase bg-white border-b border-gray-200">
+                                    Role
+                                </th>
+                                <th scope="col" className="px-5 py-3 text-sm font-normal text-left text-gray-800 uppercase bg-white border-b border-gray-200">
+                                    Active
+                                </th>
+                                <th scope="col" className="px-5 py-3 text-sm font-normal text-left text-gray-800 uppercase bg-white border-b border-gray-200">
+                                    &nbsp;
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
+                                    <p className="text-gray-900 whitespace-no-wrap">
+                                        name
+                                    </p>
+                                </td>
+                                <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
+                                    <p className="text-gray-900 whitespace-no-wrap">
+                                        email
+                                    </p>
+                                </td>
+                                <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
+                                    <p className="text-gray-900 whitespace-no-wrap">
+                                        role
+                                    </p>
+                                </td>
+                                <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
+                                    <p className="text-gray-900 whitespace-no-wrap">
+                                        active
+                                    </p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
             <div className="flex flex-col items-center w-full my-4 space-y-4 md:space-x-4 md:space-y-0 md:flex-row">
                 <div className="w-full md:w-6/12">
                     <div className="relative w-full overflow-hidden bg-white shadow-lg dark:bg-gray-700">
