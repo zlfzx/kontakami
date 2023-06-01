@@ -1,11 +1,9 @@
 import { useContext } from "react"
 import { ChatContext } from "../store"
 
-let pathFile
+let pathFile = '/'
 if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
-    pathFile = 'http://localhost:8080/storage/'
-} else {
-    pathFile = '/storage/'
+    pathFile = 'http://localhost:8080/'
 }
 
 export default function BubbleChat(props) {
@@ -33,7 +31,7 @@ export default function BubbleChat(props) {
         if (!!file) {
             if (file.type == 'photo') {
                 return (
-                    <img src={pathFile + 'files/photo/' + file.file_name} loading="lazy" className="w-full h-full select-none" />
+                    <img src={pathFile + file.file_name} loading="lazy" className="w-full h-full select-none" />
                 )
             }
         }

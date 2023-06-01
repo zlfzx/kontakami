@@ -140,7 +140,7 @@ func receiveImage(update tgbotapi.Update) {
 
 		ext := strings.Split(getFile.FilePath, ".")[1]
 		filename := fmt.Sprintf("%s.%s", getFile.FileUniqueID, ext)
-		path := "storage/files/photo"
+		path := fmt.Sprintf("storage/files/%d/photo", update.Message.From.ID)
 
 		if err := os.MkdirAll(path, os.ModePerm); err != nil {
 			panic(err)
@@ -163,7 +163,7 @@ func receiveImage(update tgbotapi.Update) {
 		file := models.File{
 			MessageID:    msg.ID,
 			Type:         models.FileTypePhoto,
-			FileName:     filename,
+			FileName:     path,
 			FileID:       getFile.FileID,
 			FileUniqueID: getFile.FileUniqueID,
 			FileSize:     getFile.FileSize,

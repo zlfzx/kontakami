@@ -113,7 +113,7 @@ func (s *Service) SendMessage(chatID int64, message *models.Message) (int, error
 		return sendMsg.MessageID, nil
 	} else {
 		if message.File.Type == "photo" {
-			file := tgbotapi.FilePath("storage/files/photo/" + message.File.FileName)
+			file := tgbotapi.FilePath(message.File.FileName)
 			msg := tgbotapi.NewPhoto(chatID, file)
 			if message.MessageID != 0 {
 				msg.ReplyToMessageID = message.MessageID
@@ -133,13 +133,13 @@ func (s *Service) SendMessage(chatID int64, message *models.Message) (int, error
 
 			newFileName := fmt.Sprintf("%s.%s", photo.FileUniqueID, fileExt)
 
-			path := fmt.Sprintf("storage/files/photo/%s", message.File.FileName)
-			newPath := fmt.Sprintf("storage/files/photo/%s", newFileName)
+			path := message.File.FileName
+			newPath := fmt.Sprintf("storage/files/%d/photo/%s", chatID, newFileName)
 			err = os.Rename(path, newPath)
 			if err != nil {
 				fmt.Println(err)
 			}
-			message.File.FileName = newFileName
+			message.File.FileName = newPath
 
 			message.File.FileID = photo.FileID
 			message.File.FileUniqueID = photo.FileUniqueID

@@ -88,7 +88,7 @@ func PostChat(w http.ResponseWriter, r *http.Request) {
 	if errFile == nil {
 		defer f.Close()
 
-		path := "storage/files/photo"
+		path := fmt.Sprintf("storage/files/%d/photo", id)
 		_ = os.MkdirAll(path, os.ModePerm)
 		path = path + "/" + h.Filename
 
@@ -113,7 +113,7 @@ func PostChat(w http.ResponseWriter, r *http.Request) {
 
 		message.File = &models.File{
 			Type:     fileType,
-			FileName: h.Filename,
+			FileName: path,
 			MimeType: &mimeType,
 		}
 	}

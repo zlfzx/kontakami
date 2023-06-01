@@ -5,6 +5,7 @@ const initialState = {
     messages: [],
     newChat: null,
     replyTo: null,
+    unread: 0,
 };
 
 export const ChatContext = createContext(initialState);
@@ -32,6 +33,11 @@ export const ChatProvider = ({ children }) => {
                 return {
                     ...state,
                     replyTo: action.payload,
+                };
+            case "SET_UNREAD":
+                return {
+                    ...state,
+                    unread: action.payload,
                 };
             default:
                 return state;

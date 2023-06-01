@@ -2,11 +2,9 @@ import axios from "axios"
 import { useContext, useEffect, useState } from "react"
 import { ChatContext } from "../store"
 
-let pathFile
+let pathFile = '/'
 if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
-    pathFile = 'http://localhost:8080/storage/'
-} else {
-    pathFile = '/storage/'
+    pathFile = 'http://localhost:8080/'
 }
 
 export default function ChatForm({ chatId }) {
@@ -94,7 +92,7 @@ export default function ChatForm({ chatId }) {
                     <div className="w-full px-4 text-left flex">
                         {!!state.replyTo.file && state.replyTo.file.type == 'photo' && (
                             <div className="mr-3">
-                                <img src={pathFile + 'files/photo/' + state.replyTo.file.file_name} alt="" className="w-10" loading="lazy" />
+                                <img src={pathFile + state.replyTo.file.file_name} alt="" className="w-10" loading="lazy" />
                             </div>
                         )}
                         <div>
