@@ -10,6 +10,12 @@ export default function AddCommand({ isOpen, closeModal, setCommands, isEdit, da
     const [message, setMessage] = useState('')
 
     useEffect(() => {
+
+        setCommandId('')
+        setCommand('')
+        setDescription('')
+        setMessage('')
+
         if (isEdit) {
             setCommandId(data.id)
             setCommand(data.command)

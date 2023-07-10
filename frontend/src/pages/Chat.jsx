@@ -10,9 +10,15 @@ export default function Chat() {
 
     const getChats = async () => {
         const req = await axios.get('/api/v1/chat')
-        const data = req.data
+        const data = req.data.data
 
-        dispatch({ type: 'SET_CHATS', payload: data.data })
+        dispatch({ type: 'SET_CHATS', payload: data })
+
+        let unread = 0
+        data.forEach(element => {
+            unread += element.unread_messages
+        });
+        dispatch({ type: 'SET_UNREAD', payload: unread })
     }
 
     useEffect(() => {

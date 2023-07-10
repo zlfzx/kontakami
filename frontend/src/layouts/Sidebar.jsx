@@ -1,6 +1,10 @@
 import { NavLink } from "react-router-dom";
+import { ChatContext } from "../store";
+import { useContext } from "react";
 
 export default function Sidebar() {
+
+    const [state, dispatch] = useContext(ChatContext)
 
     let classLink = "flex items-center justify-start w-full p-2 pl-6 my-2 "
     const classActive = "text-gray-800 transition-colors duration-200 border-l-4 border-blue-500 dark:text-white"
@@ -46,7 +50,7 @@ export default function Sidebar() {
                             <span className="mx-2 text-sm font-normal">
                                 Conversation
                                 <span className="w-4 h-2 p-1 ml-4 text-xs text-gray-400 bg-gray-200 rounded">
-                                    0
+                                    {state.unread}
                                 </span>
                             </span>
                         </NavLink>
