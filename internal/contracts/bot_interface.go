@@ -7,7 +7,6 @@ import (
 )
 
 type BotService interface {
-	ReceiveMessage(update *tgbotapi.Update)
 	SaveUser(update *tgbotapi.Update) (user models.User)
 	SaveChat(update *tgbotapi.Update) (chat models.Chat)
 	SaveMessage(userID int64, update *tgbotapi.Update) (message models.Message)

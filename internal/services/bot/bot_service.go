@@ -24,10 +24,6 @@ func Init(a *contracts.App) (s contracts.BotService) {
 	return
 }
 
-func (s *Service) ReceiveMessage(update *tgbotapi.Update) {
-
-}
-
 func (s *Service) SaveUser(update *tgbotapi.Update) (user models.User) {
 	user = models.User{
 		ID:        update.Message.From.ID,
@@ -191,28 +187,3 @@ func (s *Service) GetUserProfilePhoto(userID int64) *string {
 
 	return nil
 }
-
-// func downloadFile(filepath, url string) {
-// 	// Get the data
-// 	resp, err := http.Get(url)
-// 	if err != nil {
-// 		panic(err)
-// 	}
-// 	defer resp.Body.Close()
-
-// 	// Create the file
-// 	out, err := os.Create(filepath)
-// 	if err != nil {
-// 		panic(err)
-// 	}
-// 	defer out.Close()
-
-// 	// Write the body to file
-// 	_, err = io.Copy(out, resp.Body)
-
-// 	if err != nil {
-// 		panic(err)
-// 	}
-
-// 	fmt.Println("Downloaded", filepath)
-// }
