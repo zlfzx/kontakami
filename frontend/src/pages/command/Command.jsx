@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/table"
 
 const AddCommand = lazy(() => import('./AddCommand'))
-const GreetingSet = lazy(() => import('./GreetingSet'))
+const StartMessage = lazy(() => import('./StartMessage'))
 
 export default function Command() {
 
@@ -107,7 +107,7 @@ export default function Command() {
                 Command
             </h1>
             <h2 className="text-gray-400 text-md mb-5">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Ad voluptatem ab sequi vitae, ratione labore?
+                Command is used to handle automatic messages
             </h2>
 
             <Button onClick={modalAddCommand}>
@@ -198,7 +198,7 @@ export default function Command() {
                     </Table>
                 </div>
                 <div className="basis-1/3 bg-white">
-                    <GreetingSet />
+                    <StartMessage />
                 </div>
             </div>
 

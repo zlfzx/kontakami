@@ -112,33 +112,28 @@ func DeleteCommand(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-func GetGreeting(w http.ResponseWriter, r *http.Request) {
-	greeting := app.Services.Command.GetGreeting()
+func GetInitMessage(w http.ResponseWriter, r *http.Request) {
+	initMessage := app.Services.Command.GetInitMessage()
 
 	render.JSON(w, r, Response{
 		Status: "success",
 		Code:   http.StatusOK,
-		Data:   greeting,
+		Data:   initMessage,
 	})
 }
 
-func PutGreeting(w http.ResponseWriter, r *http.Request) {
-	// greeting := models.Setting{
-	// 	ID: 1,
-	// }
-	// var greeting models.Setting
-
-	greeting := app.Services.Command.GetGreeting()
-	if err := json.NewDecoder(r.Body).Decode(&greeting); err != nil {
+func PutInitMessage(w http.ResponseWriter, r *http.Request) {
+	initMessage := app.Services.Command.GetInitMessage()
+	if err := json.NewDecoder(r.Body).Decode(&initMessage); err != nil {
 		ResponseError(w, r, http.StatusBadRequest, err.Error())
 		return
 	}
 
-	app.Services.Command.SaveGreeting(&greeting)
+	app.Services.Command.SaveInitMessage(&initMessage)
 
 	render.JSON(w, r, Response{
 		Status: "success",
 		Code:   http.StatusOK,
-		Data:   greeting,
+		Data:   initMessage,
 	})
 }

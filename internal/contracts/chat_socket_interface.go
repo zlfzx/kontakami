@@ -6,7 +6,13 @@ import (
 	"nhooyr.io/websocket"
 )
 
+type Subscriber struct {
+	ID        int64
+	Message   chan interface{}
+	CloseSlow func()
+}
+
 type ChatSocketService interface {
 	Subscribe(ctx context.Context, c *websocket.Conn, id int) error
-	Publish(msg any)
+	Publish(sub *Subscriber, msg any)
 }

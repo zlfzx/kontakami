@@ -31,6 +31,9 @@ export default function ChatUser() {
 
         if (!!chatUser?.unread_messages && chatUser?.unread_messages > 0) {
             axios.post(`/api/v1/chat/${chatUser.id}/read`)
+
+            const unread = state.unread - chatUser.unread_messages
+            dispatch({ type: 'SET_UNREAD', payload: unread })
         }
     }
 

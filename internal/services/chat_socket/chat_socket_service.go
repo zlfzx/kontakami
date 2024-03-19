@@ -11,16 +11,16 @@ import (
 	"nhooyr.io/websocket/wsjson"
 )
 
-type Subscriber struct {
-	ID        int64
-	Message   chan interface{}
-	CloseSlow func()
-}
+// type Subscriber struct {
+// 	ID        int64
+// 	Message   chan interface{}
+// 	CloseSlow func()
+// }
 
 type Service struct {
 	*contracts.App
 	SubscriberMessageBuffer int
-	Subscribers             map[*Subscriber]struct{}
+	Subscribers             map[*contracts.Subscriber]struct{}
 	SubscribersMutex        *sync.Mutex
 	PublishLimiter          *rate.Limiter
 }
@@ -29,7 +29,7 @@ func Init(a *contracts.App) contracts.ChatSocketService {
 	s := &Service{
 		App:                     a,
 		SubscriberMessageBuffer: 16,
-		Subscribers:             make(map[*Subscriber]struct{}),
+		Subscribers:             make(map[*contracts.Subscriber]struct{}),
 		SubscribersMutex:        &sync.Mutex{},
 		PublishLimiter:          rate.NewLimiter(rate.Every(time.Millisecond*100), 8),
 	}
@@ -40,7 +40,7 @@ func Init(a *contracts.App) contracts.ChatSocketService {
 func (s *Service) Subscribe(ctx context.Context, c *websocket.Conn, id int) error {
 	ctx = c.CloseRead(ctx)
 
-	sub := &Subscriber{
+	sub := &contracts.Subscriber{
 		ID:      int64(id),
 		Message: make(chan interface{}, s.SubscriberMessageBuffer),
 		CloseSlow: func() {
@@ -63,7 +63,7 @@ func (s *Service) Subscribe(ctx context.Context, c *websocket.Conn, id int) erro
 	}
 }
 
-func (s *Service) addSubscriber(sub *Subscriber) {
+func (s *Service) addSubscriber(sub *contracts.Subscriber) {
 	s.SubscribersMutex.Lock()
 	s.Subscribers[sub] = struct{}{}
 	s.SubscribersMutex.Unlock()
@@ -71,27 +71,35 @@ func (s *Service) addSubscriber(sub *Subscriber) {
 	// if the first subscriber, send all chats
 	if sub.ID == 0 {
 		chats := s.Services.Chat.GetChats()
-		s.Publish(chats)
+		s.Publish(sub, chats)
 	}
 }
 
-func (s *Service) deleteSubscriber(sub *Subscriber) {
+func (s *Service) deleteSubscriber(sub *contracts.Subscriber) {
 	s.SubscribersMutex.Lock()
 	delete(s.Subscribers, sub)
 	s.SubscribersMutex.Unlock()
 }
 
-func (s *Service) Publish(msg any) {
+func (s *Service) Publish(sub *contracts.Subscriber, msg any) {
 	s.SubscribersMutex.Lock()
 	defer s.SubscribersMutex.Unlock()
 
 	s.PublishLimiter.Wait(context.Background())
 
-	for sub := range s.Subscribers {
+	if sub != nil {
 		select {
 		case sub.Message <- msg:
 		default:
 			go sub.CloseSlow()
+		}
+	} else {
+		for sub := range s.Subscribers {
+			select {
+			case sub.Message <- msg:
+			default:
+				go sub.CloseSlow()
+			}
 		}
 	}
 }

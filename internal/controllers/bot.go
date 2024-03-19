@@ -56,15 +56,15 @@ func InitBot() {
 			chat.Message = &msg
 
 			// app.Services.ChatSocket.Publish(msg, update.Message.Chat.ID)
-			app.Services.ChatSocket.Publish(chat)
+			app.Services.ChatSocket.Publish(nil, chat)
 
 			// command
 			if update.Message.IsCommand() {
 
 				if update.Message.Command() == "start" {
-					greeting := app.Services.Command.GetGreeting()
-					if greeting.Greeting {
-						msg := tgbotapi.NewMessage(update.Message.Chat.ID, greeting.GreetingMessage)
+					initMessage := app.Services.Command.GetInitMessage()
+					if initMessage.IsInitMessage {
+						msg := tgbotapi.NewMessage(update.Message.Chat.ID, *initMessage.InitMessage)
 						msg.ReplyToMessageID = update.Message.MessageID
 
 						send, _ := bot.Send(msg)
@@ -73,18 +73,18 @@ func InitBot() {
 							MessageID: msg.ReplyToMessageID,
 						}
 						update.Message.MessageID = send.MessageID
-						update.Message.Text = greeting.GreetingMessage
+						update.Message.Text = *initMessage.InitMessage
 						app.Services.Bot.SaveMessage(0, &update)
 
 						botMsg := models.Message{
 							ID:        send.MessageID,
 							MessageID: msg.ReplyToMessageID,
 							ChatID:    chat.ID,
-							Text:      greeting.GreetingMessage,
+							Text:      *initMessage.InitMessage,
 							Date:      int(time.Now().Unix()),
 						}
 						chat.Message = &botMsg
-						app.Services.ChatSocket.Publish(chat)
+						app.Services.ChatSocket.Publish(nil, chat)
 					}
 				} else {
 					// list of commands
@@ -111,7 +111,7 @@ func InitBot() {
 								Date:      int(time.Now().Unix()),
 							}
 							chat.Message = &botMsg
-							app.Services.ChatSocket.Publish(chat)
+							app.Services.ChatSocket.Publish(nil, chat)
 						}
 					}
 				}
@@ -172,6 +172,6 @@ func receiveImage(update tgbotapi.Update) {
 
 		msg.File = &file
 		chat.Message = &msg
-		app.Services.ChatSocket.Publish(chat)
+		app.Services.ChatSocket.Publish(nil, chat)
 	}
 }

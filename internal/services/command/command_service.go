@@ -80,18 +80,17 @@ func (s *Service) setBotCommand() {
 	}
 }
 
-func (s *Service) GetGreeting() (greeting models.Setting) {
-	s.DB.First(&greeting)
+func (s *Service) GetInitMessage() (initMessage models.Setting) {
+	s.DB.First(&initMessage)
 	return
 }
 
-func (s *Service) SaveGreeting(greeting *models.Setting) {
-
+func (s *Service) SaveInitMessage(initMessage *models.Setting) {
 	var setting models.Setting
 	s.DB.First(&setting)
 
-	setting.Greeting = greeting.Greeting
-	setting.GreetingMessage = greeting.GreetingMessage
+	setting.IsInitMessage = initMessage.IsInitMessage
+	setting.InitMessage = initMessage.InitMessage
 
 	s.DB.Save(&setting)
 
