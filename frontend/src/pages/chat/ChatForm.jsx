@@ -1,6 +1,7 @@
 import axios from "axios"
 import { useContext, useEffect, useState } from "react"
-import { ChatContext } from "../store"
+import { ChatContext } from "../../store"
+import { Button } from "@/components/ui/button"
 
 let pathFile = '/'
 if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
@@ -126,7 +127,7 @@ export default function ChatForm({ chatId }) {
                     </div>
                 </div>
             )}
-            <form className="bg-white shadow flex" onSubmit={sendChat}>
+            <form className="w-full bg-white shadow flex" onSubmit={sendChat}>
                 <div className="flex-1 flex items-center">
                     <div className="pl-4 text-gray-500 cursor-pointer">
                         <div className="flex w-full items-center justify-center">
@@ -145,7 +146,7 @@ export default function ChatForm({ chatId }) {
                     <textarea name="" rows="1" className="w-full block outline-none py-3 px-4 bg-transparent border-none  focus:ring-0 resize-none" placeholder="Type a message..." value={message} onChange={e => setMessage(e.target.value)} onKeyDown={onEnterPress}></textarea>
                 </div>
                 <div className="flex-2 flex justify-center">
-                    <button type="submit" className="w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 focus:ring-0 focus:ring-offset-blue-200 text-white transition ease-in duration-200 text-center shadow focus:outline-none">Send</button>
+                    <Button type="submit" className="h-full">Send</Button>
                 </div>
             </form>
         </>

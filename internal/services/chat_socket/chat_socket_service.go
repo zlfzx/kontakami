@@ -67,6 +67,12 @@ func (s *Service) addSubscriber(sub *Subscriber) {
 	s.SubscribersMutex.Lock()
 	s.Subscribers[sub] = struct{}{}
 	s.SubscribersMutex.Unlock()
+
+	// if the first subscriber, send all chats
+	if sub.ID == 0 {
+		chats := s.Services.Chat.GetChats()
+		s.Publish(chats)
+	}
 }
 
 func (s *Service) deleteSubscriber(sub *Subscriber) {

@@ -3,6 +3,7 @@ import Sidebar from './layouts/Sidebar'
 import Wrapper from './layouts/Wrapper'
 import { Toaster } from 'react-hot-toast'
 import { ChatContext } from './store'
+import userIcon from './assets/user.png'
 
 let pathPhoto
 if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
@@ -53,13 +54,20 @@ function App() {
       const data = JSON.parse(e.data)
       const path = window.location.pathname
 
-      if (!path.includes(`/chat/${data.id}`)) {
-        if (!!data.message.user_id) {
+      if (!!data?.message?.user_id) {
+        if (!path.includes(`/chat/${data.id}`)) {
           showNotification(data)
         }
-      }
 
-      dispatch({ type: 'SET_NEW_CHAT', payload: data })
+        dispatch({ type: 'SET_NEW_CHAT', payload: data })
+        dispatch({ type: 'ADD_UNREAD' })
+      } else {
+        let unread_messages = 0;
+        data.map((chat) => {
+          unread_messages += chat.unread_messages
+        })
+        dispatch({ type: 'SET_UNREAD', payload: unread_messages })
+      }
     }
 
     return () => {

@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom'
-import userIcon from '../assets/user.png'
+import userIcon from '../../assets/user.png'
 
 let pathPhoto
 if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
@@ -8,7 +8,7 @@ if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
     pathPhoto = '/storage/profiles/'
 }
 
-export default function UserItem({ chat }) {
+export default function ChatItem({ chat }) {
 
     const name = chat.first_name + ' ' + chat.last_name
 
@@ -25,7 +25,7 @@ export default function UserItem({ chat }) {
     }
 
     return (
-        <NavLink to={`${chat.id}`} className="flex flex-row" onClick={clickItem}>
+        <NavLink to={`${chat.id}`} className="flex flex-row border-b" onClick={clickItem}>
             <div className="flex items-center flex-1 p-4 cursor-pointer select-none hover:bg-gray-100">
                 <div className="flex flex-col items-center justify-center w-10 h-10 mr-4">
                     <span className="relative block">

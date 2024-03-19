@@ -48,7 +48,7 @@ export default function Sidebar() {
                                 </svg>
                             </span>
                             <span className="mx-2 text-sm font-normal">
-                                Conversation
+                                Chat
                                 <span className="w-4 h-2 p-1 ml-4 text-xs text-gray-400 bg-gray-200 rounded">
                                     {state.unread}
                                 </span>

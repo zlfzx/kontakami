@@ -1,10 +1,13 @@
 import axios from 'axios'
 import { useContext, useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import userIcon from '../assets/user.png'
-import { ChatContext } from '../store'
+import userIcon from '../../assets/user.png'
+import { ChatContext } from '../../store'
 import BubbleChat from './BubbleChat'
 import ChatForm from './ChatForm'
+import { CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import { Avatar, AvatarImage } from '@/components/ui/avatar'
+import { ScrollArea } from '@/components/ui/scroll-area'
 
 let pathPhoto
 if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
@@ -35,7 +38,7 @@ export default function ChatUser() {
 
     const scrollRef = useRef(null)
     const scrollToBottom = () => {
-        scrollRef.current.scrollTop = scrollRef.current.scrollHeight
+        scrollRef.current.scrollTop = scrollRef.current.scrollHeight * 2
     }
 
     useEffect(() => {
@@ -68,25 +71,20 @@ export default function ChatUser() {
 
     return (
         <>
-            <div className="w-full px-4 py-5 border-b sm:px-6 flex flex-row">
-                <div className="flex flex-col items-center justify-center w-10 h-10 mr-4">
-                    <a href="#" className="relative block">
-                        <img alt="profil" src={profilPhoto} className="mx-auto object-cover rounded-full h-10 w-10 " />
-                    </a>
-                </div>
-                <div className="flex-1 pl-1 md:mr-16">
-                    <div className="font-medium dark:text-white">
-                        {chat?.first_name + ' ' + chat?.last_name}
-                    </div>
-                    <div className="text-sm text-gray-600 dark:text-gray-200">
-                        {chat?.username}
-                    </div>
-                </div>
-            </div>
+            <CardHeader className="border-b flex flex-row items-center">
+                <Avatar className="mr-4">
+                    <AvatarImage src={profilPhoto} alt="profil" />
+                </Avatar>
 
-            <div className="chat h-full px-4 pb-3 overflow-y-auto" ref={scrollRef}>
-                <div className="flex flex-col justify-start items-center w-full">
-                    {state.messages?.map((message, index) => {
+                <div>
+                    <CardTitle>{chat?.first_name + ' ' + chat?.last_name}</CardTitle>
+                    <CardDescription>{chat?.username}</CardDescription>
+                </div>
+            </CardHeader>
+
+            <ScrollArea className="chat h-full px-4 py-3" ref={scrollRef}>
+                {
+                    state.messages?.map((message, index) => {
                         let replyTo = null
                         if (!!message.message_id) {
                             replyTo = state.messages.find(m => m.id == message.message_id)
@@ -95,9 +93,8 @@ export default function ChatUser() {
                             <BubbleChat key={index} message={message} replyTo={replyTo} />
                         )
                     }
-                    )}
-                </div>
-            </div>
+                )}
+            </ScrollArea>
 
             <div className="w-full bg-gray-100 px-4 py-5">
                 <ChatForm chatId={chatId} />

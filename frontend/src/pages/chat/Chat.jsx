@@ -1,8 +1,10 @@
 import { useEffect, useContext } from 'react'
 import { Outlet } from 'react-router-dom'
-import UserItem from '../components/UserItem'
+import ChatItem from './ChatItem'
 import axios from 'axios'
-import { ChatContext } from '../store'
+import { ChatContext } from '../../store'
+import { ScrollArea } from '@/components/ui/scroll-area'
+import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 
 export default function Chat() {
 
@@ -23,10 +25,10 @@ export default function Chat() {
 
     useEffect(() => {
         getChats()
+        console.log('getChats')
     }, [])
 
     useEffect(() => {
-        console.log('newChat', state.newChat)
         if (state.newChat != null) {
 
             let chatExist = false
@@ -40,35 +42,36 @@ export default function Chat() {
             if (!chatExist) {
                 dispatch({ type: 'SET_CHATS', payload: [state.newChat, ...state.chats] })
             }
-                
-            
+
+
             // dispatch({ type: 'SET_CHATS', payload: [...state.chats, state.newChat] })
         }
     }, [state.newChat])
-    
+
     return (
         <div className="grid grid-cols-3 gap-4 w-full h-full">
-            <div className="col-span-1 bg-white shadow dark:bg-gray-800 h-full flex flex-col justify-start overflow-y-auto">
-                <div className="w-full px-4 py-5 border-b sm:px-6">
-                    <h3 className="text-lg font-medium leading-6 text-gray-900 dark:text-white">
-                        Conversation
-                    </h3>
-                    <p className="max-w-2xl mt-1 text-sm text-gray-500 dark:text-gray-200">
-                        List conversation
-                    </p>
-                </div>
-                <div className="h-full overflow-y-auto">
-                    <ul className="flex flex-col divide-y divide">
-                        {state.chats?.map((chat) => (
-                            <UserItem key={chat.id} chat={chat} />
-                        ))}
-                    </ul>
-                </div>
-            </div>
+            <Card className="col-span-1 rounded-none h-full flex flex-col overflow-y-hidden">
+                <CardHeader className="border-b">
+                    <CardTitle>Conversation</CardTitle>
+                    <CardDescription>List conversation</CardDescription>
+                </CardHeader>
+                <ScrollArea className="h-full">
+                    {state.chats?.map((chat) => (
+                        <ChatItem key={chat.id} chat={chat} />
+                    ))}
+                    {/* delete soon */}
+                    {/* {state.chats?.map((chat) => (
+                        <ChatItem key={chat.id} chat={chat} />
+                    ))}
+                    {state.chats?.map((chat) => (
+                        <ChatItem key={chat.id} chat={chat} />
+                    ))} */}
+                </ScrollArea>
+            </Card>
 
-            <div className="col-span-2 bg-white shadow dark:bg-gray-800 h-full flex flex-col justify-between overflow-y-auto">
+            <Card className="col-span-2 rounded-none h-full flex flex-col overflow-y-hidden">
                 <Outlet />
-            </div>
+            </Card>
         </div>
     )
 }

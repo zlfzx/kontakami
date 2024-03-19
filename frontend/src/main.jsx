@@ -9,10 +9,10 @@ import { ChatProvider } from './store'
 
 const App = lazy(() => import('./App'))
 const Dashboard = lazy(() => import('./pages/Dashboard'))
-const Chat = lazy(() => import('./pages/Chat'))
-const ChatIndex = lazy(() => import('./components/ChatIndex'))
-const ChatUser = lazy(() => import('./components/ChatUser'))
-const Command = lazy(() => import('./pages/Command'))
+const Chat = lazy(() => import('./pages/chat/Chat'))
+const ChatIndex = lazy(() => import('./pages/chat/ChatIndex'))
+const ChatUser = lazy(() => import('./pages/chat/ChatUser'))
+const Command = lazy(() => import('./pages/command/Command'))
 const Setting = lazy(() => import('./pages/Setting'))
 
 axios.defaults.baseURL = 'http://localhost:8080'

@@ -1,5 +1,5 @@
 import { useContext } from "react"
-import { ChatContext } from "../store"
+import { ChatContext } from "../../store"
 
 let pathFile = '/'
 if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {

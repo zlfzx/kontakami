@@ -39,6 +39,11 @@ export const ChatProvider = ({ children }) => {
                     ...state,
                     unread: action.payload,
                 };
+            case "ADD_UNREAD":
+                return {
+                    ...state,
+                    unread: state.unread + 1,
+                };
             default:
                 return state;
         }

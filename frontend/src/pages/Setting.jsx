@@ -1,3 +1,11 @@
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from "@/components/ui/table"
 
 
 export default function Setting() {
@@ -9,51 +17,24 @@ export default function Setting() {
             </h1>
             <div className="flex flex-row items-start gap-5 mt-6">
                 <div className="basis-2/3 bg-white">
-                    <table className="min-w-full leading-normal">
-                        <thead>
-                            <tr>
-                                <th scope="col" className="px-5 py-3 text-sm font-normal text-left text-gray-800 uppercase bg-white border-b border-gray-200">
-                                    Name
-                                </th>
-                                <th scope="col" className="px-5 py-3 text-sm font-normal text-left text-gray-800 uppercase bg-white border-b border-gray-200">
-                                    Email
-                                </th>
-                                <th scope="col" className="px-5 py-3 text-sm font-normal text-left text-gray-800 uppercase bg-white border-b border-gray-200">
-                                    Role
-                                </th>
-                                <th scope="col" className="px-5 py-3 text-sm font-normal text-left text-gray-800 uppercase bg-white border-b border-gray-200">
-                                    Active
-                                </th>
-                                <th scope="col" className="px-5 py-3 text-sm font-normal text-left text-gray-800 uppercase bg-white border-b border-gray-200">
-                                    &nbsp;
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
-                                    <p className="text-gray-900 whitespace-no-wrap">
-                                        name
-                                    </p>
-                                </td>
-                                <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
-                                    <p className="text-gray-900 whitespace-no-wrap">
-                                        email
-                                    </p>
-                                </td>
-                                <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
-                                    <p className="text-gray-900 whitespace-no-wrap">
-                                        role
-                                    </p>
-                                </td>
-                                <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
-                                    <p className="text-gray-900 whitespace-no-wrap">
-                                        active
-                                    </p>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <Table>
+                        <TableHeader>
+                            <TableRow>
+                                <TableHead>Name</TableHead>
+                                <TableHead>Email</TableHead>
+                                <TableHead>Role</TableHead>
+                                <TableHead>Active</TableHead>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                            <TableRow>
+                                <TableCell className="font-medium">INV001</TableCell>
+                                <TableCell>Paid</TableCell>
+                                <TableCell>Credit Card</TableCell>
+                                <TableCell className="text-right">$250.00</TableCell>
+                            </TableRow>
+                        </TableBody>
+                    </Table>
                 </div>
             </div>
 

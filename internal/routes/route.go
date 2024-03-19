@@ -29,8 +29,8 @@ func LoadRoutes(a *contracts.App) (r *chi.Mux) {
 
 	fs := http.FileServer(http.Dir("./web"))
 	r.Get("/*", func(w http.ResponseWriter, r *http.Request) {
-		if _, err := os.Stat("./web" + r.RequestURI); os.IsNotExist(err) {
-			http.StripPrefix(r.RequestURI, fs).ServeHTTP(w, r)
+		if _, err := os.Stat("./web" + r.URL.Path); os.IsNotExist(err) {
+			http.StripPrefix(r.URL.Path, fs).ServeHTTP(w, r)
 		} else {
 			fs.ServeHTTP(w, r)
 		}
