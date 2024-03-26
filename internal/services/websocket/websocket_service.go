@@ -1,4 +1,4 @@
-package chatsocket
+package websocket
 
 import (
 	"context"
@@ -25,7 +25,7 @@ type Service struct {
 	PublishLimiter          *rate.Limiter
 }
 
-func Init(a *contracts.App) contracts.ChatSocketService {
+func Init(a *contracts.App) contracts.WebSocketService {
 	s := &Service{
 		App:                     a,
 		SubscriberMessageBuffer: 16,

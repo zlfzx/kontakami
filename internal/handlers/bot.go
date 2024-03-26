@@ -1,4 +1,4 @@
-package controllers
+package handlers
 
 import (
 	"fmt"
@@ -55,8 +55,8 @@ func InitBot() {
 
 			chat.Message = &msg
 
-			// app.Services.ChatSocket.Publish(msg, update.Message.Chat.ID)
-			app.Services.ChatSocket.Publish(nil, chat)
+			// app.Services.WebSocket.Publish(msg, update.Message.Chat.ID)
+			app.Services.WebSocket.Publish(nil, chat)
 
 			// command
 			if update.Message.IsCommand() {
@@ -84,7 +84,7 @@ func InitBot() {
 							Date:      int(time.Now().Unix()),
 						}
 						chat.Message = &botMsg
-						app.Services.ChatSocket.Publish(nil, chat)
+						app.Services.WebSocket.Publish(nil, chat)
 					}
 				} else {
 					// list of commands
@@ -111,7 +111,7 @@ func InitBot() {
 								Date:      int(time.Now().Unix()),
 							}
 							chat.Message = &botMsg
-							app.Services.ChatSocket.Publish(nil, chat)
+							app.Services.WebSocket.Publish(nil, chat)
 						}
 					}
 				}
@@ -172,6 +172,6 @@ func receiveImage(update tgbotapi.Update) {
 
 		msg.File = &file
 		chat.Message = &msg
-		app.Services.ChatSocket.Publish(nil, chat)
+		app.Services.WebSocket.Publish(nil, chat)
 	}
 }

@@ -1,8 +1,10 @@
 package routes
 
 import (
+	"io/fs"
 	"kontakami/internal/contracts"
-	"kontakami/internal/controllers"
+	"kontakami/internal/handlers"
+	"log"
 	"net/http"
 	"os"
 	"strings"
@@ -16,7 +18,7 @@ func LoadRoutes(a *contracts.App) (r *chi.Mux) {
 
 	app = a
 
-	controllers.Init(app)
+	handlers.Init(app)
 
 	r = chi.NewRouter()
 	// r.Use(middleware.Logger)
@@ -27,16 +29,33 @@ func LoadRoutes(a *contracts.App) (r *chi.Mux) {
 	ws := ws()
 	r.Mount("/ws", ws)
 
-	fs := http.FileServer(http.Dir("./web"))
-	r.Get("/*", func(w http.ResponseWriter, r *http.Request) {
-		if _, err := os.Stat("./web" + r.URL.Path); os.IsNotExist(err) {
-			http.StripPrefix(r.URL.Path, fs).ServeHTTP(w, r)
+	web, err := fs.Sub(fs.FS(a.Web), "web")
+	if err != nil {
+		log.Fatal("failed to load web directory: " + err.Error())
+	}
+
+	// fs := http.FileServer(http.Dir("./web"))
+	fileServer := http.FileServer(http.FS(web))
+	r.HandleFunc("/*", func(w http.ResponseWriter, r *http.Request) {
+		path := strings.TrimPrefix(r.URL.Path, "/")
+		if _, err := fs.ReadFile(web, path); err != nil {
+			http.StripPrefix(r.URL.Path, fileServer).ServeHTTP(w, r)
 		} else {
-			fs.ServeHTTP(w, r)
+			fileServer.ServeHTTP(w, r)
 		}
+
+		// if _, err := os.Stat("./web" + r.URL.Path); os.IsNotExist(err) {
+		// 	http.StripPrefix(r.URL.Path, fileServer).ServeHTTP(w, r)
+		// } else {
+		// 	fileServer.ServeHTTP(w, r)
+		// }
 	})
 
 	// storage
+	if _, err := os.Stat("./storage"); os.IsNotExist(err) {
+		os.Mkdir("./storage", os.ModePerm)
+	}
+
 	r.Get("/storage/*", func(w http.ResponseWriter, r *http.Request) {
 		rctx := chi.RouteContext(r.Context())
 		pathPrefix := strings.TrimSuffix(rctx.RoutePattern(), "/*")

@@ -1,7 +1,7 @@
 package routes
 
 import (
-	"kontakami/internal/controllers"
+	"kontakami/internal/handlers"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
@@ -24,19 +24,19 @@ func api() (r *chi.Mux) {
 	r.Use(middleware.Logger)
 
 	r.Route("/v1", func(r chi.Router) {
-		r.Get("/chat", controllers.GetChats)
-		r.Get("/chat/{id}", controllers.GetChat)
-		r.Post("/chat/{id}", controllers.PostChat)
-		r.Post("/chat/{id}/read", controllers.ReadChat)
+		r.Get("/chat", handlers.GetChats)
+		r.Get("/chat/{id}", handlers.GetChat)
+		r.Post("/chat/{id}", handlers.PostChat)
+		r.Post("/chat/{id}/read", handlers.ReadChat)
 
-		r.Get("/command", controllers.GetCommands)
-		r.Post("/command", controllers.PostCommand)
-		r.Put("/command/{id}/update-status", controllers.UpdateStatusCommand)
-		r.Put("/command/{id}", controllers.PutCommand)
-		r.Delete("/command/{id}", controllers.DeleteCommand)
+		r.Get("/command", handlers.GetCommands)
+		r.Post("/command", handlers.PostCommand)
+		r.Put("/command/{id}/update-status", handlers.UpdateStatusCommand)
+		r.Put("/command/{id}", handlers.PutCommand)
+		r.Delete("/command/{id}", handlers.DeleteCommand)
 
-		r.Get("/init-message", controllers.GetInitMessage)
-		r.Put("/init-message", controllers.PutInitMessage)
+		r.Get("/init-message", handlers.GetInitMessage)
+		r.Put("/init-message", handlers.PutInitMessage)
 	})
 
 	return

@@ -12,7 +12,7 @@ type Subscriber struct {
 	CloseSlow func()
 }
 
-type ChatSocketService interface {
+type WebSocketService interface {
 	Subscribe(ctx context.Context, c *websocket.Conn, id int) error
 	Publish(sub *Subscriber, msg any)
 }

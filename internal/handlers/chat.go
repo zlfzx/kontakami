@@ -1,4 +1,4 @@
-package controllers
+package handlers
 
 import (
 	"context"
@@ -173,7 +173,7 @@ func ChatSocket(w http.ResponseWriter, r *http.Request) {
 	}
 	defer c.Close(websocket.StatusInternalError, "the sky is falling")
 
-	err = app.Services.ChatSocket.Subscribe(r.Context(), c, id)
+	err = app.Services.WebSocket.Subscribe(r.Context(), c, id)
 	if errors.Is(err, context.Canceled) {
 		return
 	}
